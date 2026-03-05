@@ -10,436 +10,662 @@
       --rw-darkred:#9F000F;
       --rw-teal:#208684;
       --rw-gray:#656565;
-      --bg:#f6f7f8;
+      --bg:#f6f7f9;
       --card:#ffffff;
-      --border:#e5e7eb;
+      --line:#e6e8ee;
+      --text:#111827;
+      --muted:#6b7280;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:var(--bg);
-      color:#111827;
+      color:var(--text);
     }
     header{
-      background:linear-gradient(90deg,var(--rw-darkred),var(--rw-red));
+      background:linear-gradient(90deg,var(--rw-red),var(--rw-darkred));
       color:#fff;
-      padding:18px 16px;
+      padding:16px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
     }
     header h1{
       margin:0;
-      font-size:18px;
-      letter-spacing:.4px;
+      font-size:16px;
+      letter-spacing:.3px;
+      font-weight:700;
     }
-    header p{
-      margin:6px 0 0 0;
-      opacity:.9;
-      font-size:13px;
-    }
-    main{max-width:980px;margin:18px auto;padding:0 16px 32px}
-    .grid{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:12px;
-    }
-    @media (min-width:900px){
-      .grid{grid-template-columns:1.15fr .85fr}
-    }
+    .wrap{max-width:1100px;margin:0 auto;padding:16px}
+    .row{display:flex;gap:12px;flex-wrap:wrap}
     .card{
       background:var(--card);
-      border:1px solid var(--border);
+      border:1px solid var(--line);
       border-radius:12px;
       padding:14px;
       box-shadow:0 1px 0 rgba(0,0,0,.03);
     }
-    .card h2{
-      margin:0 0 10px 0;
-      font-size:15px;
-      color:#111827;
-    }
-    label{
-      display:block;
-      font-size:12px;
-      color:var(--rw-gray);
-      margin-bottom:6px;
-    }
-    input[type="text"], input[type="date"], textarea, select{
-      width:100%;
-      padding:10px 10px;
-      border:1px solid var(--border);
-      border-radius:10px;
-      font-size:14px;
-      outline:none;
-      background:#fff;
-    }
-    textarea{min-height:70px;resize:vertical}
-    input:focus, textarea:focus, select:focus{
-      border-color:rgba(32,134,132,.5);
-      box-shadow:0 0 0 3px rgba(32,134,132,.12);
-    }
-    .row{
-      display:grid;
-      grid-template-columns:1fr;
-      gap:10px;
-    }
-    @media (min-width:640px){
-      .row.two{grid-template-columns:1fr 1fr}
-      .row.three{grid-template-columns:1fr 1fr 1fr}
-    }
-    .btnbar{
-      display:flex;
-      flex-wrap:wrap;
-      gap:10px;
-      margin-top:10px;
-    }
+    .card h2{margin:0 0 10px 0;font-size:14px}
+    .muted{color:var(--muted);font-size:12px}
     button{
       border:0;
       border-radius:10px;
       padding:10px 12px;
-      font-weight:600;
+      font-weight:700;
       cursor:pointer;
+      background:#111827;
+      color:#fff;
+    }
+    button.secondary{background:#eef2ff;color:#111827;border:1px solid var(--line)}
+    button.danger{background:var(--rw-red)}
+    button.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}
+    button:disabled{opacity:.55;cursor:not-allowed}
+    .list{
+      width:100%;
+      border-collapse:collapse;
       font-size:13px;
     }
-    .btn-primary{background:var(--rw-teal);color:#fff}
-    .btn-danger{background:var(--rw-darkred);color:#fff}
-    .btn-ghost{background:#fff;border:1px solid var(--border);color:#111827}
-    .hint{font-size:12px;color:var(--rw-gray);margin-top:8px;line-height:1.35}
-    table{
+    .list th,.list td{
+      padding:10px 8px;
+      border-bottom:1px solid var(--line);
+      vertical-align:top;
+    }
+    .list th{color:#374151;text-align:left;font-size:12px}
+    .pill{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid var(--line);
+      background:#fafafa;
+    }
+    .grid-2{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:12px;
+      width:100%;
+    }
+    @media (max-width: 900px){
+      .grid-2{grid-template-columns:1fr}
+    }
+
+    /* checklist table */
+    .chk{
       width:100%;
       border-collapse:separate;
       border-spacing:0;
-      overflow:hidden;
-      border:1px solid var(--border);
-      border-radius:12px;
+      font-size:13px;
     }
-    th, td{
-      padding:10px;
-      border-bottom:1px solid var(--border);
+    .chk th,.chk td{
+      border-bottom:1px solid var(--line);
+      padding:10px 8px;
       vertical-align:top;
     }
-    th{
-      background:#fafafa;
-      text-align:left;
+    .chk thead th{
+      position:sticky;
+      top:0;
+      background:var(--card);
+      z-index:1;
       font-size:12px;
+      color:#374151;
+    }
+    .topic{
+      background:#fbfbfc;
+      font-weight:800;
       color:#111827;
     }
-    tr:last-child td{border-bottom:0}
-    .status{
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
-    .chip{
-      display:inline-flex;
-      align-items:center;
-      padding:4px 8px;
-      border-radius:999px;
-      font-size:12px;
-      border:1px solid var(--border);
+    .note-red{color:var(--rw-red);font-weight:800}
+    .note-red.block{display:block}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .input, textarea{
+      width:100%;
+      padding:9px 10px;
+      border-radius:10px;
+      border:1px solid var(--line);
+      outline:none;
+      font:inherit;
       background:#fff;
     }
-    .chip.ok{border-color:rgba(32,134,132,.35); background:rgba(32,134,132,.08); color:#0f4b4a}
-    .chip.bad{border-color:rgba(210,0,20,.35); background:rgba(210,0,20,.08); color:#6b0b14}
-    .meta{
-      display:grid;
-      gap:10px;
-      grid-template-columns:1fr;
-    }
-    .small{
-      font-size:12px;color:var(--rw-gray)
-    }
+    textarea{min-height:42px;resize:vertical}
 
-    /* Print/PDF styling */
-    @media print{
-      header{background:#fff;color:#000;border-bottom:2px solid #000}
-      header p{color:#000}
-      body{background:#fff}
-      .btnbar, .hint{display:none !important}
-      .card{box-shadow:none}
-      .card{break-inside:avoid}
-      main{max-width:100%; margin:0; padding:0}
-      .grid{grid-template-columns:1fr}
-      input, textarea, select{border:1px solid #bbb !important}
+    .choice{
+      display:flex;
+      gap:6px;
+      align-items:center;
+    }
+    .seg{
+      display:inline-flex;
+      border:1px solid var(--line);
+      border-radius:10px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .seg button{
+      border-radius:0;
+      padding:8px 10px;
+      background:#fff;
+      color:#111827;
+      border-right:1px solid var(--line);
+      font-weight:900;
+      min-width:44px;
+    }
+    .seg button:last-child{border-right:0}
+    .seg button.on{
+      background:#111827;
+      color:#fff;
+    }
+    .seg button.on.ok{background:var(--rw-teal)}
+    .seg button.on.no{background:var(--rw-gray)}
+    .small{font-size:12px}
+
+    .hidden{display:none !important;}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+      margin-bottom:12px;
     }
   </style>
 </head>
-
 <body>
-  <header>
-    <h1>LAMEL RENGØRING TJEKLISTE</h1>
-    <p>Vedligeholdelse / maintenance – Rens LAMEL</p>
-  </header>
+<header>
+  <h1>LAMEL RENGØRING TJEKLISTE</h1>
+  <div class="actions">
+    <button class="ghost" id="btnHome" title="Til oversigt">Oversigt</button>
+    <button id="btnNew" title="Ny tjekliste">Ny liste</button>
+  </div>
+</header>
 
-  <main>
-    <div class="grid">
-      <!-- Checklist -->
-      <section class="card" aria-label="Tjekliste">
-        <h2>Tjekliste</h2>
-
-        <table>
-          <thead>
-            <tr>
-              <th style="width:36%">Punkt</th>
-              <th style="width:18%">Status</th>
-              <th>Kommentar / Noter</th>
-            </tr>
-          </thead>
-          <tbody id="checklistBody"></tbody>
-        </table>
-
-        <div class="btnbar">
-          <button class="btn-primary" id="saveBtn" type="button">Gem</button>
-          <button class="btn-ghost" id="exportBtn" type="button">Eksportér til PDF</button>
-          <button class="btn-danger" id="resetBtn" type="button">Nulstil</button>
-        </div>
-
-        <div class="hint">
-          <strong>Tip:</strong> “Eksportér til PDF” bruger browserens print-dialog. Vælg <em>“Gem som PDF”</em>.
-        </div>
-      </section>
-
-      <!-- Metadata -->
-      <aside class="card" aria-label="Oplysninger">
-        <h2>Oplysninger</h2>
-
-        <div class="row two">
-          <div>
-            <label for="location">Område / Linje (valgfri)</label>
-            <input id="location" type="text" placeholder="Fx Linje 2, Zone A" />
-          </div>
-          <div>
-            <label for="lamelId">LAMEL ID / Reference (valgfri)</label>
-            <input id="lamelId" type="text" placeholder="Fx LML-1234" />
-          </div>
-        </div>
-
-        <div class="row two" style="margin-top:10px">
-          <div>
-            <label for="date">Dato</label>
-            <input id="date" type="date" />
-          </div>
-          <div>
-            <label for="timeStamp">Tidspunkt (auto)</label>
-            <input id="timeStamp" type="text" readonly />
-            <div class="small" style="margin-top:6px">Opdateres automatisk ved “Gem”.</div>
-          </div>
-        </div>
-
-        <div style="margin-top:10px">
-          <label for="approvedBy">Underskrift / Godkendt af (navn)</label>
-          <input id="approvedBy" type="text" placeholder="Skriv dit navn" />
-        </div>
-
-        <div style="margin-top:10px">
-          <label for="generalNote">Generel note (valgfri)</label>
-          <textarea id="generalNote" placeholder="Fx observationer, afvigelser, dele bestilt..."></textarea>
-        </div>
-
-        <div class="meta" style="margin-top:10px">
-          <div class="chip" id="savedIndicator">Ikke gemt endnu</div>
-        </div>
-
-        <div class="hint">
-          Data gemmes lokalt i din browser (<em>localStorage</em>). Hvis du åbner filen på en anden pc/enhed, følger data ikke med.
-        </div>
-      </aside>
+<div class="wrap">
+  <!-- HOME / OVERVIEW -->
+  <section id="viewHome" class="card">
+    <div class="topbar">
+      <div>
+        <h2>Gemte tjeklister</h2>
+        <div class="muted">Viser alle tjeklister gemt lokalt i din browser.</div>
+      </div>
+      <div class="actions">
+        <button id="btnNew2">Ny liste</button>
+        <button class="secondary" id="btnClearAll" title="Slet alle gemte lister">Slet alle</button>
+      </div>
     </div>
-  </main>
 
-  <script>
-    // ====== Konfiguration: ændr/tilføj punkter her ======
-    const CHECKLIST_ITEMS = [
-      "Visuel kontrol af lameller (skader / slid)",
-      "Fjern løst støv/snavs før rengøring",
-      "Rens lameller (korrekt metode/udstyr)",
-      "Kontrollér at lameller er tørre/rene efter rengøring",
-      "Kontrollér at området er ryddet og sikkert efter arbejde"
-    ];
+    <table class="list" id="savedTable">
+      <thead>
+        <tr>
+          <th>Dato/tid</th>
+          <th>Underskrift</th>
+          <th>Status</th>
+          <th style="width:220px;">Handling</th>
+        </tr>
+      </thead>
+      <tbody id="savedTbody"></tbody>
+    </table>
+    <div id="noSaved" class="muted" style="padding:10px 0;display:none;">Ingen gemte tjeklister endnu. Tryk “Ny liste”.</div>
+  </section>
 
-    const STORAGE_KEY = "lamel_rengoering_tjekliste_v1";
+  <!-- EDIT / FORM -->
+  <section id="viewForm" class="hidden">
+    <div class="grid-2">
+      <div class="card">
+        <h2>Registrering</h2>
+        <div class="row">
+          <div style="flex:1;min-width:220px">
+            <label class="small muted">Dato/tid</label>
+            <input class="input" id="dt" type="datetime-local" />
+          </div>
+          <div style="flex:1;min-width:220px">
+            <label class="small muted">Underskrift (navn)</label>
+            <input class="input" id="sig" type="text" placeholder="Skriv dit navn" />
+          </div>
+        </div>
+        <div style="margin-top:10px" class="muted small">
+          <span class="pill">Udført: ✓ = udført, X = ikke udført</span>
+          <span class="pill">Fejlmeldt i eROPEX: ✓ = fejlmeldt (ja), X = ikke fejlmeldt (nej)</span>
+        </div>
 
-    const el = (id) => document.getElementById(id);
+        <div class="actions" style="margin-top:12px">
+          <button id="btnSave">Gem</button>
+          <button class="secondary" id="btnBack">Tilbage</button>
+          <button class="secondary" id="btnPdf">Eksportér til PDF</button>
+          <button class="danger" id="btnDelete" title="Slet denne tjekliste">Slet</button>
+        </div>
+        <div id="saveHint" class="muted small" style="margin-top:10px"></div>
+      </div>
 
-    function nowTimeString() {
-      const d = new Date();
-      return d.toLocaleString("da-DK", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", second:"2-digit" });
+      <div class="card">
+        <h2>Noter til hele listen (valgfri)</h2>
+        <textarea id="globalNote" placeholder="Skriv evt. generelle bemærkninger..."></textarea>
+        <div class="muted small" style="margin-top:8px">
+          Tip: Kommentarer pr. punkt findes i tabellen.
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:12px; overflow:auto;">
+      <h2>Tjekliste</h2>
+      <table class="chk" id="chkTable">
+        <thead>
+          <tr>
+            <th style="min-width:340px;">Punkt</th>
+            <th style="width:170px;">Udført</th>
+            <th style="width:210px;">Fejlmeldt i eROPEX</th>
+            <th style="min-width:260px;">Kommentar</th>
+          </tr>
+        </thead>
+        <tbody id="chkBody"></tbody>
+      </table>
+    </div>
+  </section>
+</div>
+
+<!-- PDF library (client-side) -->
+<script>
+/* Minimal inline PDF approach via browser print.
+   For real PDF generation without server, we use window.print() with print CSS.
+*/
+</script>
+
+<style>
+@media print{
+  header, #btnSave, #btnBack, #btnPdf, #btnDelete, #btnHome, #btnNew, #btnNew2, #btnClearAll { display:none !important; }
+  body{background:#fff}
+  .wrap{padding:0}
+  .card{border:0;box-shadow:none}
+  .seg{border:0}
+  .seg button{border:0}
+  .input, textarea{border:0}
+}
+</style>
+
+<script>
+  // ---------- Data model ----------
+  const STORAGE_KEY = "lamel_rengoering_tjeklister_v1";
+
+  // checklist definition (topics + items)
+  const CHECKLIST = [
+    { type:"topic", text:"Limkar" },
+    { type:"item", text:"Tøm vand fra de 2 kar over i palletanken" },
+    { type:"item", text:"Rengør de 2 limkar" },
+    { type:"item", text:"Skift folie på valser på rullebord efter limkar, hvis nødvendigt" },
+    { type:"item", text:'NB! Opstil skilte om støv i område "SKAL stå med RØD skrift"', noteRed:true },
+    { type:"item", text:"Gulv blæses ren over mod væg op til pause", noteLines:[
+      { text:"(OBS! Husk støvmaske og evt. dragt)", red:true }
+    ]},
+    { type:"item", text:"Hæld vand i begge kar med ca. 1 deciliter brun sæbe i hvert kar" },
+    { type:"item", text:"Rengøring af limområde" },
+    { type:"item", text:"Rengøring af gribere" },
+    { type:"item", text:"Skifte folie ved limområde og på ruller" },
+    { type:"item", text:"Skifte RPI-plader på gulv under limområde efter behov" },
+    { type:"item", text:"Udskifte filt til emhætte" },
+    { type:"item", text:"Plastik på front af emhætte efter behov" },
+    { type:"item", text:"Rengøring af følere" },
+
+    { type:"topic", text:"Battmobil" },
+    { type:"item", text:"Rense under løftebord" },
+
+    { type:"topic", text:"Overflade- og pendulsav" },
+    { type:"item", text:"Sørge for klinger til overfladesav" },
+    { type:"item", text:'Tjek/rengør land v. pendulsav ”landevej"' },
+    { type:"item", text:"Pendulsav rengøres / blæses ren" },
+    { type:"item", text:"Feje under maskine, langs kanter og hjørner" },
+    { type:"item", text:"Feje under dørkplader JB-side" },
+    { type:"item", text:"Rengøre v. trækaksel og motor" },
+    { type:"item", text:'Rengør land fra vinkeloverføring til pendulsav ”jernbane"' },
+
+    { type:"topic", text:"Opruller" },
+    { type:"item", text:"Støvsug anlæg", noteLines:[
+      { text:"(OBS! Må ikke blæses støv på sensorer m.v.)", red:true }
+    ]},
+    { type:"item", text:"Svejsebjælke efterses for aflejringer" },
+    { type:"item", text:"Vend kniven til ubrugt skær / skift kniv" },
+    { type:"item", text:"Transport bånd støvsuges" },
+    { type:"item", text:"Fremføringshjul til folie kontrolleres for aflejring og aftørres" },
+    { type:"item", text:"Følere aftørres", noteLines:[
+      { text:"(NB! Brug Honeywell Clear + microfiberklude)", red:true }
+    ]},
+
+    { type:"topic", text:"Vikler" },
+    { type:"item", text:"Skifte kniv efter behov" },
+
+    { type:"topic", text:"Anlægget" },
+    { type:"item", text:"Aftørring af scannere, sensorer og følere", noteLines:[
+      { text:"(NB! Brug Honeywell Clear + microfiberklude)", red:true }
+    ]},
+    { type:"item", text:"Støvsug opruller-, vikler-, pallemagasin områder samt bag anlæg m.v." },
+    { type:"item", text:"Tjek etiketprinterne" },
+
+    { type:"topic", text:"Generelt" },
+    { type:"item", text:"Rengøring og oprydning af reoler" },
+    { type:"item", text:"Rengøring og oprydning af arbejdsbord" },
+    { type:"item", text:"Rengøring og oprydning af skabe" },
+    { type:"item", text:"Rengøring og oprydning af pult" },
+    { type:"item", text:"Skraldespande og containere tømmes" },
+    { type:"item", text:"Opfyld af klude, Honeywell Clear rens, affaldsposer, fedt, etiketter og carbon i skab" },
+  ];
+
+  function uid(){
+    return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
+  }
+
+  function loadAll(){
+    try{
+      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
+    }catch(e){
+      return [];
+    }
+  }
+  function saveAll(arr){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+  }
+
+  function nowLocalInputValue(){
+    const d = new Date();
+    const pad = (n)=> String(n).padStart(2,"0");
+    return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+
+  // ---------- UI state ----------
+  let current = null; // active checklist object
+
+  // elements
+  const viewHome = document.getElementById("viewHome");
+  const viewForm = document.getElementById("viewForm");
+
+  const btnHome = document.getElementById("btnHome");
+  const btnNew = document.getElementById("btnNew");
+  const btnNew2 = document.getElementById("btnNew2");
+  const btnBack = document.getElementById("btnBack");
+  const btnSave = document.getElementById("btnSave");
+  const btnPdf = document.getElementById("btnPdf");
+  const btnDelete = document.getElementById("btnDelete");
+  const btnClearAll = document.getElementById("btnClearAll");
+
+  const savedTbody = document.getElementById("savedTbody");
+  const noSaved = document.getElementById("noSaved");
+
+  const dt = document.getElementById("dt");
+  const sig = document.getElementById("sig");
+  const globalNote = document.getElementById("globalNote");
+  const chkBody = document.getElementById("chkBody");
+  const saveHint = document.getElementById("saveHint");
+
+  // ---------- Rendering ----------
+  function formatDateTime(iso){
+    if(!iso) return "";
+    const d = new Date(iso);
+    return d.toLocaleString("da-DK");
+  }
+
+  function showHome(){
+    viewHome.classList.remove("hidden");
+    viewForm.classList.add("hidden");
+    renderSaved();
+  }
+
+  function showForm(){
+    viewHome.classList.add("hidden");
+    viewForm.classList.remove("hidden");
+  }
+
+  function renderSaved(){
+    const all = loadAll().sort((a,b)=> (b.updatedAt||"").localeCompare(a.updatedAt||""));
+    savedTbody.innerHTML = "";
+    noSaved.style.display = all.length ? "none" : "block";
+
+    for(const item of all){
+      const tr = document.createElement("tr");
+      const doneCount = (item.rows||[]).filter(r=>r.type==="item" && r.done==="yes").length;
+      const totalCount = (item.rows||[]).filter(r=>r.type==="item").length;
+      const status = `${doneCount}/${totalCount} udført`;
+
+      tr.innerHTML = `
+        <td>${formatDateTime(item.datetime)}</td>
+        <td>${escapeHtml(item.signature || "")}</td>
+        <td><span class="pill">${status}</span></td>
+        <td>
+          <div class="actions">
+            <button class="secondary" data-open="${item.id}">Åbn</button>
+            <button class="danger" data-del="${item.id}">Slet</button>
+          </div>
+        </td>
+      `;
+      savedTbody.appendChild(tr);
     }
 
-    function todayISO() {
-      const d = new Date();
-      const pad = (n) => String(n).padStart(2, "0");
-      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
-    }
-
-    function buildChecklistTable() {
-      const tbody = el("checklistBody");
-      tbody.innerHTML = "";
-
-      CHECKLIST_ITEMS.forEach((label, idx) => {
-        const tr = document.createElement("tr");
-
-        const tdItem = document.createElement("td");
-        tdItem.textContent = label;
-
-        const tdStatus = document.createElement("td");
-        const statusWrap = document.createElement("div");
-        statusWrap.className = "status";
-
-        const select = document.createElement("select");
-        select.id = `status_${idx}`;
-        select.innerHTML = `
-          <option value="">Vælg…</option>
-          <option value="ok">✅ OK</option>
-          <option value="bad">❌ Ikke OK</option>
-        `;
-
-        const chip = document.createElement("span");
-        chip.className = "chip";
-        chip.id = `chip_${idx}`;
-        chip.textContent = "—";
-
-        select.addEventListener("change", () => {
-          updateChip(idx);
-          markUnsaved();
-        });
-
-        statusWrap.appendChild(select);
-        statusWrap.appendChild(chip);
-        tdStatus.appendChild(statusWrap);
-
-        const tdNote = document.createElement("td");
-        const ta = document.createElement("textarea");
-        ta.id = `note_${idx}`;
-        ta.placeholder = "Kommentar…";
-        ta.addEventListener("input", markUnsaved);
-        tdNote.appendChild(ta);
-
-        tr.appendChild(tdItem);
-        tr.appendChild(tdStatus);
-        tr.appendChild(tdNote);
-        tbody.appendChild(tr);
+    savedTbody.querySelectorAll("[data-open]").forEach(b=>{
+      b.addEventListener("click", ()=> openChecklist(b.getAttribute("data-open")));
+    });
+    savedTbody.querySelectorAll("[data-del]").forEach(b=>{
+      b.addEventListener("click", ()=>{
+        const id = b.getAttribute("data-del");
+        if(confirm("Vil du slette denne tjekliste?")){
+          const all = loadAll().filter(x=>x.id!==id);
+          saveAll(all);
+          renderSaved();
+        }
       });
-    }
+    });
+  }
 
-    function updateChip(idx) {
-      const val = el(`status_${idx}`).value;
-      const chip = el(`chip_${idx}`);
-      chip.className = "chip";
-      if (val === "ok") { chip.classList.add("ok"); chip.textContent = "OK"; }
-      else if (val === "bad") { chip.classList.add("bad"); chip.textContent = "Ikke OK"; }
-      else { chip.textContent = "—"; }
-    }
+  function newChecklist(){
+    current = {
+      id: uid(),
+      datetime: nowLocalInputValue(),
+      signature: "",
+      globalNote: "",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      rows: CHECKLIST.map((x, idx)=>{
+        if(x.type==="topic"){
+          return { key:`t_${idx}`, type:"topic", text:x.text };
+        }
+        return {
+          key:`i_${idx}`,
+          type:"item",
+          text:x.text,
+          noteLines: x.noteLines || (x.noteRed ? [{text:x.text, red:true}] : []),
+          done: "",         // "yes" or "no"
+          eropex: "",       // "yes" or "no"
+          comment: ""
+        };
+      })
+    };
 
-    function collectForm() {
-      const items = CHECKLIST_ITEMS.map((name, idx) => ({
-        name,
-        status: el(`status_${idx}`).value || "",
-        note: el(`note_${idx}`).value || ""
-      }));
-
-      return {
-        appName: "LAMEL RENGØRING TJEKLISTE",
-        location: el("location").value || "",
-        lamelId: el("lamelId").value || "",
-        date: el("date").value || "",
-        timeStamp: el("timeStamp").value || "",
-        approvedBy: el("approvedBy").value || "",
-        generalNote: el("generalNote").value || "",
-        items,
-        lastSavedAt: new Date().toISOString()
-      };
-    }
-
-    function fillForm(data) {
-      el("location").value = data.location || "";
-      el("lamelId").value = data.lamelId || "";
-      el("date").value = data.date || todayISO();
-      el("timeStamp").value = data.timeStamp || "";
-      el("approvedBy").value = data.approvedBy || "";
-      el("generalNote").value = data.generalNote || "";
-
-      (data.items || []).forEach((it, idx) => {
-        if (el(`status_${idx}`)) el(`status_${idx}`).value = it.status || "";
-        if (el(`note_${idx}`)) el(`note_${idx}`).value = it.note || "";
-        updateChip(idx);
-      });
-    }
-
-    function save() {
-      el("timeStamp").value = nowTimeString();
-      const data = collectForm();
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-      setSavedIndicator(true, data.lastSavedAt);
-    }
-
-    function load() {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      if (!raw) {
-        // defaults
-        el("date").value = todayISO();
-        el("timeStamp").value = "";
-        setSavedIndicator(false);
-        return;
+    // fix noteRed case: if noteRed we want the item text red, not duplicated
+    current.rows = current.rows.map(r=>{
+      if(r.type==="item"){
+        // If original had noteRed flag, we didn't keep it; handle by checking if text contains SKAL stå...
+        // We'll rely on noteLines being passed in above for special ones.
       }
-      try{
-        const data = JSON.parse(raw);
-        fillForm(data);
-        setSavedIndicator(true, data.lastSavedAt);
-      } catch(e){
-        console.warn("Kunne ikke læse gemte data:", e);
-        el("date").value = todayISO();
-        setSavedIndicator(false);
-      }
-    }
-
-    function resetAll() {
-      if (!confirm("Vil du nulstille alle felter?")) return;
-      localStorage.removeItem(STORAGE_KEY);
-      buildChecklistTable();
-      el("location").value = "";
-      el("lamelId").value = "";
-      el("date").value = todayISO();
-      el("timeStamp").value = "";
-      el("approvedBy").value = "";
-      el("generalNote").value = "";
-      setSavedIndicator(false);
-    }
-
-    function exportPDF() {
-      // Print dialog -> user chooses "Save as PDF"
-      window.print();
-    }
-
-    function setSavedIndicator(saved, isoTime) {
-      const chip = el("savedIndicator");
-      chip.className = "chip";
-      if (saved) {
-        chip.classList.add("ok");
-        const d = isoTime ? new Date(isoTime) : null;
-        chip.textContent = d ? `Gemt: ${d.toLocaleString("da-DK")}` : "Gemt";
-      } else {
-        chip.classList.add("bad");
-        chip.textContent = "Ikke gemt / ændringer ikke gemt";
-      }
-    }
-
-    function markUnsaved() {
-      setSavedIndicator(false);
-    }
-
-    // mark unsaved on meta input changes
-    ["location","lamelId","date","approvedBy","generalNote"].forEach(id => {
-      el(id).addEventListener("input", markUnsaved);
-      el(id).addEventListener("change", markUnsaved);
+      return r;
     });
 
-    // init
-    buildChecklistTable();
-    load();
+    // Load to UI
+    dt.value = current.datetime;
+    sig.value = current.signature;
+    globalNote.value = current.globalNote;
+    renderChecklistTable();
+    updateHints();
+    showForm();
+  }
 
-    el("saveBtn").addEventListener("click", save);
-    el("exportBtn").addEventListener("click", exportPDF);
-    el("resetBtn").addEventListener("click", resetAll);
-  </script>
+  function openChecklist(id){
+    const all = loadAll();
+    const found = all.find(x=>x.id===id);
+    if(!found){ alert("Kunne ikke finde tjeklisten."); return; }
+    current = found;
+
+    dt.value = current.datetime || nowLocalInputValue();
+    sig.value = current.signature || "";
+    globalNote.value = current.globalNote || "";
+
+    renderChecklistTable();
+    updateHints();
+    showForm();
+  }
+
+  function renderChecklistTable(){
+    chkBody.innerHTML = "";
+
+    for(const row of current.rows){
+      if(row.type==="topic"){
+        const tr = document.createElement("tr");
+        tr.className = "topic";
+        tr.innerHTML = `<td colspan="4">${escapeHtml(row.text)}</td>`;
+        chkBody.appendChild(tr);
+        continue;
+      }
+
+      const tr = document.createElement("tr");
+
+      // Build point cell with red note lines (and parentheses red when requested)
+      let pointHtml = `<div>${escapeHtml(row.text)}</div>`;
+      if(Array.isArray(row.noteLines) && row.noteLines.length){
+        // if noteLines were intended as extra lines, show them under
+        // (we avoid duplicating main text; only add if note line differs)
+        for(const nl of row.noteLines){
+          if(nl && nl.text && nl.text !== row.text){
+            pointHtml += `<span class="note-red block">${escapeHtml(nl.text)}</span>`;
+          }
+        }
+      }
+      // Special: some lines in your text should be red but still under each other:
+      // we implemented via noteLines above.
+
+      tr.innerHTML = `
+        <td>${pointHtml}</td>
+        <td>${segmented(row.key, "done", row.done, true)}</td>
+        <td>${segmented(row.key, "eropex", row.eropex, false)}</td>
+        <td><textarea data-k="${row.key}" data-f="comment" placeholder="Kommentar...">${escapeHtml(row.comment||"")}</textarea></td>
+      `;
+      chkBody.appendChild(tr);
+    }
+
+    // wire segmented controls
+    chkBody.querySelectorAll("[data-set]").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        const key = btn.getAttribute("data-k");
+        const field = btn.getAttribute("data-f");
+        const value = btn.getAttribute("data-set"); // yes/no/clear
+        const r = current.rows.find(x=>x.key===key);
+        if(!r) return;
+        if(value==="clear") r[field] = "";
+        else r[field] = value;
+        renderChecklistTable();
+        updateHints();
+      });
+    });
+
+    // wire comments
+    chkBody.querySelectorAll("textarea[data-f='comment']").forEach(tx=>{
+      tx.addEventListener("input", ()=>{
+        const key = tx.getAttribute("data-k");
+        const r = current.rows.find(x=>x.key===key);
+        if(!r) return;
+        r.comment = tx.value;
+        current.updatedAt = new Date().toISOString();
+        updateHints();
+      });
+    });
+  }
+
+  function segmented(key, field, currentValue, isDone){
+    // ✓ and X must display when selected.
+    const yesClass = (currentValue==="yes") ? `on ${isDone?'ok':'ok'}` : "";
+    const noClass  = (currentValue==="no")  ? `on no` : "";
+    const clearClass = (currentValue==="") ? "on" : "";
+
+    // For clarity: keep clear button as "–"
+    return `
+      <div class="seg" role="group" aria-label="${field}">
+        <button type="button" class="${yesClass}" data-set="yes" data-k="${key}" data-f="${field}" title="✓">✓</button>
+        <button type="button" class="${noClass}" data-set="no" data-k="${key}" data-f="${field}" title="X">X</button>
+        <button type="button" class="${clearClass}" data-set="clear" data-k="${key}" data-f="${field}" title="Ryd">–</button>
+      </div>
+    `;
+  }
+
+  function updateHints(){
+    if(!current) return;
+    const items = current.rows.filter(r=>r.type==="item");
+    const doneYes = items.filter(r=>r.done==="yes").length;
+    const doneNo = items.filter(r=>r.done==="no").length;
+    const eroYes = items.filter(r=>r.eropex==="yes").length;
+
+    saveHint.textContent = `Udført: ✓=${doneYes}, X=${doneNo}. Fejlmeldt i eROPEX (✓): ${eroYes}.`;
+  }
+
+  function upsertCurrent(){
+    current.datetime = dt.value || nowLocalInputValue();
+    current.signature = sig.value || "";
+    current.globalNote = globalNote.value || "";
+    current.updatedAt = new Date().toISOString();
+
+    const all = loadAll();
+    const idx = all.findIndex(x=>x.id===current.id);
+    if(idx >= 0) all[idx] = current;
+    else all.push(current);
+    saveAll(all);
+  }
+
+  // ---------- Helpers ----------
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  // ---------- Events ----------
+  btnHome.addEventListener("click", showHome);
+  btnBack.addEventListener("click", showHome);
+  btnNew.addEventListener("click", newChecklist);
+  btnNew2.addEventListener("click", newChecklist);
+
+  btnSave.addEventListener("click", ()=>{
+    if(!current) return;
+    upsertCurrent();
+    alert("Gemt.");
+    renderSaved();
+  });
+
+  btnDelete.addEventListener("click", ()=>{
+    if(!current) return;
+    if(confirm("Vil du slette denne tjekliste?")){
+      const all = loadAll().filter(x=>x.id!==current.id);
+      saveAll(all);
+      current = null;
+      showHome();
+    }
+  });
+
+  btnClearAll.addEventListener("click", ()=>{
+    if(confirm("Vil du slette ALLE gemte tjeklister?")){
+      saveAll([]);
+      renderSaved();
+    }
+  });
+
+  btnPdf.addEventListener("click", ()=>{
+    // Ensure latest values are in model before printing
+    if(!current) return;
+    upsertCurrent();
+    window.print();
+  });
+
+  // Keep model updated for header fields
+  dt.addEventListener("input", ()=>{ if(current){ current.datetime = dt.value; current.updatedAt = new Date().toISOString(); }});
+  sig.addEventListener("input", ()=>{ if(current){ current.signature = sig.value; current.updatedAt = new Date().toISOString(); }});
+  globalNote.addEventListener("input", ()=>{ if(current){ current.globalNote = globalNote.value; current.updatedAt = new Date().toISOString(); }});
+
+  // ---------- Init ----------
+  (function init(){
+    renderSaved();
+    showHome();
+  })();
+</script>
 </body>
 </html>
