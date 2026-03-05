@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="da">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LAMEL RENGØRING TJEKLISTE</title>
+  <style>
+    :root{
+      --rw-red:#D20014;
+      --rw-darkred:#9F000F;
+      --rw-teal:#208684;
+      --rw-gray:#656565;
+      --bg:#f6f7f8;
+      --card:#ffffff;
+      --border:#e5e7eb;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:var(--bg);
+      color:#111827;
+    }
+    header{
+      background:linear-gradient(90deg,var(--rw-darkred),var(--rw-red));
+      color:#fff;
+      padding:18px 16px;
+    }
+    header h1{
+      margin:0;
+      font-size:18px;
+      letter-spacing:.4px;
+    }
+    header p{
+      margin:6px 0 0 0;
+      opacity:.9;
+      font-size:13px;
+    }
+    main{max-width:980px;margin:18px auto;padding:0 16px 32px}
+    .grid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:12px;
+    }
+    @media (min-width:900px){
+      .grid{grid-template-columns:1.15fr .85fr}
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:14px;
+      box-shadow:0 1px 0 rgba(0,0,0,.03);
+    }
+    .card h2{
+      margin:0 0 10px 0;
+      font-size:15px;
+      color:#111827;
+    }
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--rw-gray);
+      margin-bottom:6px;
+    }
+    input[type="text"], input[type="date"], textarea, select{
+      width:100%;
+      padding:10px 10px;
+      border:1px solid var(--border);
+      border-radius:10px;
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+    textarea{min-height:70px;resize:vertical}
+    input:focus, textarea:focus, select:focus{
+      border-color:rgba(32,134,132,.5);
+      box-shadow:0 0 0 3px rgba(32,134,132,.12);
+    }
+    .row{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+    @media (min-width:640px){
+      .row.two{grid-template-columns:1fr 1fr}
+      .row.three{grid-template-columns:1fr 1fr 1fr}
+    }
+    .btnbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:10px;
+    }
+    button{
+      border:0;
+      border-radius:10px;
+      padding:10px 12px;
+      font-weight:600;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .btn-primary{background:var(--rw-teal);color:#fff}
+    .btn-danger{background:var(--rw-darkred);color:#fff}
+    .btn-ghost{background:#fff;border:1px solid var(--border);color:#111827}
+    .hint{font-size:12px;color:var(--rw-gray);margin-top:8px;line-height:1.35}
+    table{
+      width:100%;
+      border-collapse:separate;
+      border-spacing:0;
+      overflow:hidden;
+      border:1px solid var(--border);
+      border-radius:12px;
+    }
+    th, td{
+      padding:10px;
+      border-bottom:1px solid var(--border);
+      vertical-align:top;
+    }
+    th{
+      background:#fafafa;
+      text-align:left;
+      font-size:12px;
+      color:#111827;
+    }
+    tr:last-child td{border-bottom:0}
+    .status{
+      display:flex;
+      gap:8px;
+      align-items:center;
+    }
+    .chip{
+      display:inline-flex;
+      align-items:center;
+      padding:4px 8px;
+      border-radius:999px;
+      font-size:12px;
+      border:1px solid var(--border);
+      background:#fff;
+    }
+    .chip.ok{border-color:rgba(32,134,132,.35); background:rgba(32,134,132,.08); color:#0f4b4a}
+    .chip.bad{border-color:rgba(210,0,20,.35); background:rgba(210,0,20,.08); color:#6b0b14}
+    .meta{
+      display:grid;
+      gap:10px;
+      grid-template-columns:1fr;
+    }
+    .small{
+      font-size:12px;color:var(--rw-gray)
+    }
+
+    /* Print/PDF styling */
+    @media print{
+      header{background:#fff;color:#000;border-bottom:2px solid #000}
+      header p{color:#000}
+      body{background:#fff}
+      .btnbar, .hint{display:none !important}
+      .card{box-shadow:none}
+      .card{break-inside:avoid}
+      main{max-width:100%; margin:0; padding:0}
+      .grid{grid-template-columns:1fr}
+      input, textarea, select{border:1px solid #bbb !important}
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>LAMEL RENGØRING TJEKLISTE</h1>
+    <p>Vedligeholdelse / maintenance – Rens LAMEL</p>
+  </header>
+
+  <main>
+    <div class="grid">
+      <!-- Checklist -->
+      <section class="card" aria-label="Tjekliste">
+        <h2>Tjekliste</h2>
+
+        <table>
+          <thead>
+            <tr>
+              <th style="width:36%">Punkt</th>
+              <th style="width:18%">Status</th>
+              <th>Kommentar / Noter</th>
+            </tr>
+          </thead>
+          <tbody id="checklistBody"></tbody>
+        </table>
+
+        <div class="btnbar">
+          <button class="btn-primary" id="saveBtn" type="button">Gem</button>
+          <button class="btn-ghost" id="exportBtn" type="button">Eksportér til PDF</button>
+          <button class="btn-danger" id="resetBtn" type="button">Nulstil</button>
+        </div>
+
+        <div class="hint">
+          <strong>Tip:</strong> “Eksportér til PDF” bruger browserens print-dialog. Vælg <em>“Gem som PDF”</em>.
+        </div>
+      </section>
+
+      <!-- Metadata -->
+      <aside class="card" aria-label="Oplysninger">
+        <h2>Oplysninger</h2>
+
+        <div class="row two">
+          <div>
+            <label for="location">Område / Linje (valgfri)</label>
+            <input id="location" type="text" placeholder="Fx Linje 2, Zone A" />
+          </div>
+          <div>
+            <label for="lamelId">LAMEL ID / Reference (valgfri)</label>
+            <input id="lamelId" type="text" placeholder="Fx LML-1234" />
+          </div>
+        </div>
+
+        <div class="row two" style="margin-top:10px">
+          <div>
+            <label for="date">Dato</label>
+            <input id="date" type="date" />
+          </div>
+          <div>
+            <label for="timeStamp">Tidspunkt (auto)</label>
+            <input id="timeStamp" type="text" readonly />
+            <div class="small" style="margin-top:6px">Opdateres automatisk ved “Gem”.</div>
+          </div>
+        </div>
+
+        <div style="margin-top:10px">
+          <label for="approvedBy">Underskrift / Godkendt af (navn)</label>
+          <input id="approvedBy" type="text" placeholder="Skriv dit navn" />
+        </div>
+
+        <div style="margin-top:10px">
+          <label for="generalNote">Generel note (valgfri)</label>
+          <textarea id="generalNote" placeholder="Fx observationer, afvigelser, dele bestilt..."></textarea>
+        </div>
+
+        <div class="meta" style="margin-top:10px">
+          <div class="chip" id="savedIndicator">Ikke gemt endnu</div>
+        </div>
+
+        <div class="hint">
+          Data gemmes lokalt i din browser (<em>localStorage</em>). Hvis du åbner filen på en anden pc/enhed, følger data ikke med.
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <script>
+    // ====== Konfiguration: ændr/tilføj punkter her ======
+    const CHECKLIST_ITEMS = [
+      "Visuel kontrol af lameller (skader / slid)",
+      "Fjern løst støv/snavs før rengøring",
+      "Rens lameller (korrekt metode/udstyr)",
+      "Kontrollér at lameller er tørre/rene efter rengøring",
+      "Kontrollér at området er ryddet og sikkert efter arbejde"
+    ];
+
+    const STORAGE_KEY = "lamel_rengoering_tjekliste_v1";
+
+    const el = (id) => document.getElementById(id);
+
+    function nowTimeString() {
+      const d = new Date();
+      return d.toLocaleString("da-DK", { year:"numeric", month:"2-digit", day:"2-digit", hour:"2-digit", minute:"2-digit", second:"2-digit" });
+    }
+
+    function todayISO() {
+      const d = new Date();
+      const pad = (n) => String(n).padStart(2, "0");
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+    }
+
+    function buildChecklistTable() {
+      const tbody = el("checklistBody");
+      tbody.innerHTML = "";
+
+      CHECKLIST_ITEMS.forEach((label, idx) => {
+        const tr = document.createElement("tr");
+
+        const tdItem = document.createElement("td");
+        tdItem.textContent = label;
+
+        const tdStatus = document.createElement("td");
+        const statusWrap = document.createElement("div");
+        statusWrap.className = "status";
+
+        const select = document.createElement("select");
+        select.id = `status_${idx}`;
+        select.innerHTML = `
+          <option value="">Vælg…</option>
+          <option value="ok">✅ OK</option>
+          <option value="bad">❌ Ikke OK</option>
+        `;
+
+        const chip = document.createElement("span");
+        chip.className = "chip";
+        chip.id = `chip_${idx}`;
+        chip.textContent = "—";
+
+        select.addEventListener("change", () => {
+          updateChip(idx);
+          markUnsaved();
+        });
+
+        statusWrap.appendChild(select);
+        statusWrap.appendChild(chip);
+        tdStatus.appendChild(statusWrap);
+
+        const tdNote = document.createElement("td");
+        const ta = document.createElement("textarea");
+        ta.id = `note_${idx}`;
+        ta.placeholder = "Kommentar…";
+        ta.addEventListener("input", markUnsaved);
+        tdNote.appendChild(ta);
+
+        tr.appendChild(tdItem);
+        tr.appendChild(tdStatus);
+        tr.appendChild(tdNote);
+        tbody.appendChild(tr);
+      });
+    }
+
+    function updateChip(idx) {
+      const val = el(`status_${idx}`).value;
+      const chip = el(`chip_${idx}`);
+      chip.className = "chip";
+      if (val === "ok") { chip.classList.add("ok"); chip.textContent = "OK"; }
+      else if (val === "bad") { chip.classList.add("bad"); chip.textContent = "Ikke OK"; }
+      else { chip.textContent = "—"; }
+    }
+
+    function collectForm() {
+      const items = CHECKLIST_ITEMS.map((name, idx) => ({
+        name,
+        status: el(`status_${idx}`).value || "",
+        note: el(`note_${idx}`).value || ""
+      }));
+
+      return {
+        appName: "LAMEL RENGØRING TJEKLISTE",
+        location: el("location").value || "",
+        lamelId: el("lamelId").value || "",
+        date: el("date").value || "",
+        timeStamp: el("timeStamp").value || "",
+        approvedBy: el("approvedBy").value || "",
+        generalNote: el("generalNote").value || "",
+        items,
+        lastSavedAt: new Date().toISOString()
+      };
+    }
+
+    function fillForm(data) {
+      el("location").value = data.location || "";
+      el("lamelId").value = data.lamelId || "";
+      el("date").value = data.date || todayISO();
+      el("timeStamp").value = data.timeStamp || "";
+      el("approvedBy").value = data.approvedBy || "";
+      el("generalNote").value = data.generalNote || "";
+
+      (data.items || []).forEach((it, idx) => {
+        if (el(`status_${idx}`)) el(`status_${idx}`).value = it.status || "";
+        if (el(`note_${idx}`)) el(`note_${idx}`).value = it.note || "";
+        updateChip(idx);
+      });
+    }
+
+    function save() {
+      el("timeStamp").value = nowTimeString();
+      const data = collectForm();
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      setSavedIndicator(true, data.lastSavedAt);
+    }
+
+    function load() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        // defaults
+        el("date").value = todayISO();
+        el("timeStamp").value = "";
+        setSavedIndicator(false);
+        return;
+      }
+      try{
+        const data = JSON.parse(raw);
+        fillForm(data);
+        setSavedIndicator(true, data.lastSavedAt);
+      } catch(e){
+        console.warn("Kunne ikke læse gemte data:", e);
+        el("date").value = todayISO();
+        setSavedIndicator(false);
+      }
+    }
+
+    function resetAll() {
+      if (!confirm("Vil du nulstille alle felter?")) return;
+      localStorage.removeItem(STORAGE_KEY);
+      buildChecklistTable();
+      el("location").value = "";
+      el("lamelId").value = "";
+      el("date").value = todayISO();
+      el("timeStamp").value = "";
+      el("approvedBy").value = "";
+      el("generalNote").value = "";
+      setSavedIndicator(false);
+    }
+
+    function exportPDF() {
+      // Print dialog -> user chooses "Save as PDF"
+      window.print();
+    }
+
+    function setSavedIndicator(saved, isoTime) {
+      const chip = el("savedIndicator");
+      chip.className = "chip";
+      if (saved) {
+        chip.classList.add("ok");
+        const d = isoTime ? new Date(isoTime) : null;
+        chip.textContent = d ? `Gemt: ${d.toLocaleString("da-DK")}` : "Gemt";
+      } else {
+        chip.classList.add("bad");
+        chip.textContent = "Ikke gemt / ændringer ikke gemt";
+      }
+    }
+
+    function markUnsaved() {
+      setSavedIndicator(false);
+    }
+
+    // mark unsaved on meta input changes
+    ["location","lamelId","date","approvedBy","generalNote"].forEach(id => {
+      el(id).addEventListener("input", markUnsaved);
+      el(id).addEventListener("change", markUnsaved);
+    });
+
+    // init
+    buildChecklistTable();
+    load();
+
+    el("saveBtn").addEventListener("click", save);
+    el("exportBtn").addEventListener("click", exportPDF);
+    el("resetBtn").addEventListener("click", resetAll);
+  </script>
+</body>
+</html>
