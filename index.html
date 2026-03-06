@@ -1,3 +1,7 @@
+
+</html>
+
+
 <!doctype html>
 <html lang="da">
 <head>
@@ -31,6 +35,9 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
+      position:sticky;
+      top:0;
+      z-index:50;
     }
     header h1{
       margin:0;
@@ -62,6 +69,8 @@
     button.danger{background:var(--rw-red)}
     button.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}
     button:disabled{opacity:.55;cursor:not-allowed}
+    .actions{display:flex;gap:8px;flex-wrap:wrap}
+
     .list{
       width:100%;
       border-collapse:collapse;
@@ -81,6 +90,7 @@
       border:1px solid var(--line);
       background:#fafafa;
     }
+
     .grid-2{
       display:grid;
       grid-template-columns: 1fr 1fr;
@@ -92,6 +102,7 @@
     }
 
     /* checklist table */
+    .chkWrap{overflow:auto;}
     .chk{
       width:100%;
       border-collapse:separate;
@@ -107,7 +118,7 @@
       position:sticky;
       top:0;
       background:var(--card);
-      z-index:1;
+      z-index:5;
       font-size:12px;
       color:#374151;
     }
@@ -118,7 +129,7 @@
     }
     .note-red{color:var(--rw-red);font-weight:800}
     .note-red.block{display:block}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
+
     .input, textarea{
       width:100%;
       padding:9px 10px;
@@ -128,13 +139,15 @@
       font:inherit;
       background:#fff;
     }
-    textarea{min-height:42px;resize:vertical}
 
-    .choice{
-      display:flex;
-      gap:6px;
-      align-items:center;
+    /* Auto-grow textareas (no internal scroll) */
+    textarea{
+      resize:none;
+      overflow:hidden;
+      min-height:46px;
+      line-height:1.25;
     }
+
     .seg{
       display:inline-flex;
       border:1px solid var(--line);
@@ -152,19 +165,34 @@
       min-width:44px;
     }
     .seg button:last-child{border-right:0}
-    .seg button.on{
-      background:#111827;
-      color:#fff;
-    }
-    .seg button.on.ok{background:var(--rw-teal)}
-    .seg button.on.no{background:var(--rw-gray)}
-    .small{font-size:12px}
+    .seg button.on.ok{background:var(--rw-teal); color:#fff;}
+    .seg button.on.no{background:var(--rw-gray); color:#fff;}
 
+    .small{font-size:12px}
     .hidden{display:none !important;}
     .topbar{
       display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
       margin-bottom:12px;
     }
+
+    /* Print / PDF */
+    @media print{
+      header, #btnSave, #btnBack, #btnPdf, #btnDelete, #btnHome, #btnNew, #btnNew2, #btnClearAll { display:none !important; }
+      body{background:#fff}
+      .wrap{padding:0; max-width:none;}
+      .card{border:0;box-shadow:none}
+      .chkWrap{overflow:visible !important;}
+      .chk thead th{ position:static; }
+      textarea, .input{border:0; padding:0}
+      .seg{border:0}
+      .seg button{border:0; padding:0 6px}
+      tr, td, th{ break-inside:avoid; page-break-inside:avoid; }
+      table{ page-break-inside:auto; }
+      thead{ display:table-header-group; } /* gentag header på hver side */
+    }
+
+    /* Wider comment column on screen */
+    .col-comment{min-width:360px;}
   </style>
 </head>
 <body>
@@ -242,53 +270,35 @@
       </div>
     </div>
 
-    <div class="card" style="margin-top:12px; overflow:auto;">
+    <div class="card" style="margin-top:12px;">
       <h2>Tjekliste</h2>
-      <table class="chk" id="chkTable">
-        <thead>
-          <tr>
-            <th style="min-width:340px;">Punkt</th>
-            <th style="width:170px;">Udført</th>
-            <th style="width:210px;">Fejlmeldt i eROPEX</th>
-            <th style="min-width:260px;">Kommentar</th>
-          </tr>
-        </thead>
-        <tbody id="chkBody"></tbody>
-      </table>
+      <div class="chkWrap">
+        <table class="chk" id="chkTable">
+          <thead>
+            <tr>
+              <th style="min-width:340px;">Punkt</th>
+              <th style="width:170px;">Udført</th>
+              <th style="width:210px;">Fejlmeldt i eROPEX</th>
+              <th class="col-comment">Kommentar</th>
+            </tr>
+          </thead>
+          <tbody id="chkBody"></tbody>
+        </table>
+      </div>
     </div>
   </section>
 </div>
 
-<!-- PDF library (client-side) -->
-<script>
-/* Minimal inline PDF approach via browser print.
-   For real PDF generation without server, we use window.print() with print CSS.
-*/
-</script>
-
-<style>
-@media print{
-  header, #btnSave, #btnBack, #btnPdf, #btnDelete, #btnHome, #btnNew, #btnNew2, #btnClearAll { display:none !important; }
-  body{background:#fff}
-  .wrap{padding:0}
-  .card{border:0;box-shadow:none}
-  .seg{border:0}
-  .seg button{border:0}
-  .input, textarea{border:0}
-}
-</style>
-
 <script>
   // ---------- Data model ----------
-  const STORAGE_KEY = "lamel_rengoering_tjeklister_v1";
+  const STORAGE_KEY = "lamel_rengoering_tjeklister_v2";
 
-  // checklist definition (topics + items)
   const CHECKLIST = [
     { type:"topic", text:"Limkar" },
     { type:"item", text:"Tøm vand fra de 2 kar over i palletanken" },
     { type:"item", text:"Rengør de 2 limkar" },
     { type:"item", text:"Skift folie på valser på rullebord efter limkar, hvis nødvendigt" },
-    { type:"item", text:'NB! Opstil skilte om støv i område "SKAL stå med RØD skrift"', noteRed:true },
+    { type:"item", text:'NB! Opstil skilte om støv i område "SKAL stå med RØD skrift"', noteLines:[{text:'NB! Opstil skilte om støv i område "SKAL stå med RØD skrift"', red:true}] },
     { type:"item", text:"Gulv blæses ren over mod væg op til pause", noteLines:[
       { text:"(OBS! Husk støvmaske og evt. dragt)", red:true }
     ]},
@@ -349,11 +359,8 @@
   }
 
   function loadAll(){
-    try{
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
-    }catch(e){
-      return [];
-    }
+    try{ return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
+    catch(e){ return []; }
   }
   function saveAll(arr){
     localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
@@ -366,12 +373,11 @@
   }
 
   // ---------- UI state ----------
-  let current = null; // active checklist object
+  let current = null;
 
   // elements
   const viewHome = document.getElementById("viewHome");
   const viewForm = document.getElementById("viewForm");
-
   const btnHome = document.getElementById("btnHome");
   const btnNew = document.getElementById("btnNew");
   const btnNew2 = document.getElementById("btnNew2");
@@ -380,17 +386,22 @@
   const btnPdf = document.getElementById("btnPdf");
   const btnDelete = document.getElementById("btnDelete");
   const btnClearAll = document.getElementById("btnClearAll");
-
   const savedTbody = document.getElementById("savedTbody");
   const noSaved = document.getElementById("noSaved");
-
   const dt = document.getElementById("dt");
   const sig = document.getElementById("sig");
   const globalNote = document.getElementById("globalNote");
   const chkBody = document.getElementById("chkBody");
   const saveHint = document.getElementById("saveHint");
 
-  // ---------- Rendering ----------
+  function escapeHtml(s){
+    return String(s ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
   function formatDateTime(iso){
     if(!iso) return "";
     const d = new Date(iso);
@@ -402,7 +413,6 @@
     viewForm.classList.add("hidden");
     renderSaved();
   }
-
   function showForm(){
     viewHome.classList.add("hidden");
     viewForm.classList.remove("hidden");
@@ -414,11 +424,11 @@
     noSaved.style.display = all.length ? "none" : "block";
 
     for(const item of all){
-      const tr = document.createElement("tr");
       const doneCount = (item.rows||[]).filter(r=>r.type==="item" && r.done==="yes").length;
       const totalCount = (item.rows||[]).filter(r=>r.type==="item").length;
       const status = `${doneCount}/${totalCount} udført`;
 
+      const tr = document.createElement("tr");
       tr.innerHTML = `
         <td>${formatDateTime(item.datetime)}</td>
         <td>${escapeHtml(item.signature || "")}</td>
@@ -457,37 +467,29 @@
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       rows: CHECKLIST.map((x, idx)=>{
-        if(x.type==="topic"){
-          return { key:`t_${idx}`, type:"topic", text:x.text };
-        }
+        if(x.type==="topic") return { key:`t_${idx}`, type:"topic", text:x.text };
         return {
           key:`i_${idx}`,
           type:"item",
           text:x.text,
-          noteLines: x.noteLines || (x.noteRed ? [{text:x.text, red:true}] : []),
-          done: "",         // "yes" or "no"
-          eropex: "",       // "yes" or "no"
+          noteLines: x.noteLines || [],
+          done: "",     // yes/no
+          eropex: "",   // yes/no
           comment: ""
         };
       })
     };
 
-    // fix noteRed case: if noteRed we want the item text red, not duplicated
-    current.rows = current.rows.map(r=>{
-      if(r.type==="item"){
-        // If original had noteRed flag, we didn't keep it; handle by checking if text contains SKAL stå...
-        // We'll rely on noteLines being passed in above for special ones.
-      }
-      return r;
-    });
-
-    // Load to UI
     dt.value = current.datetime;
     sig.value = current.signature;
     globalNote.value = current.globalNote;
+
     renderChecklistTable();
     updateHints();
     showForm();
+
+    // ensure comment areas grow after initial render
+    requestAnimationFrame(()=> autoGrowAllTextareas());
   }
 
   function openChecklist(id){
@@ -503,6 +505,20 @@
     renderChecklistTable();
     updateHints();
     showForm();
+
+    requestAnimationFrame(()=> autoGrowAllTextareas());
+  }
+
+  function segmented(key, field, val, isDone){
+    const yesOn = (val==="yes") ? "on ok" : "";
+    const noOn  = (val==="no")  ? "on no" : "";
+
+    return `
+      <div class="seg" role="group" aria-label="${field}">
+        <button type="button" class="${yesOn}" data-set="yes" data-k="${key}" data-f="${field}" title="✓">✓</button>
+        <button type="button" class="${noOn}" data-set="no" data-k="${key}" data-f="${field}" title="X">X</button>
+      </div>
+    `;
   }
 
   function renderChecklistTable(){
@@ -519,19 +535,13 @@
 
       const tr = document.createElement("tr");
 
-      // Build point cell with red note lines (and parentheses red when requested)
       let pointHtml = `<div>${escapeHtml(row.text)}</div>`;
       if(Array.isArray(row.noteLines) && row.noteLines.length){
-        // if noteLines were intended as extra lines, show them under
-        // (we avoid duplicating main text; only add if note line differs)
         for(const nl of row.noteLines){
-          if(nl && nl.text && nl.text !== row.text){
-            pointHtml += `<span class="note-red block">${escapeHtml(nl.text)}</span>`;
-          }
+          if(!nl || !nl.text) continue;
+          pointHtml += `<span class="note-red block">${escapeHtml(nl.text)}</span>`;
         }
       }
-      // Special: some lines in your text should be red but still under each other:
-      // we implemented via noteLines above.
 
       tr.innerHTML = `
         <td>${pointHtml}</td>
@@ -539,27 +549,30 @@
         <td>${segmented(row.key, "eropex", row.eropex, false)}</td>
         <td><textarea data-k="${row.key}" data-f="comment" placeholder="Kommentar...">${escapeHtml(row.comment||"")}</textarea></td>
       `;
+
       chkBody.appendChild(tr);
     }
 
-    // wire segmented controls
+    // segmented click
     chkBody.querySelectorAll("[data-set]").forEach(btn=>{
       btn.addEventListener("click", ()=>{
         const key = btn.getAttribute("data-k");
         const field = btn.getAttribute("data-f");
-        const value = btn.getAttribute("data-set"); // yes/no/clear
+        const value = btn.getAttribute("data-set"); // yes/no
         const r = current.rows.find(x=>x.key===key);
         if(!r) return;
-        if(value==="clear") r[field] = "";
-        else r[field] = value;
+        r[field] = (r[field]===value) ? "" : value; // toggle off if same pressed
+        current.updatedAt = new Date().toISOString();
         renderChecklistTable();
         updateHints();
+        requestAnimationFrame(()=> autoGrowAllTextareas());
       });
     });
 
-    // wire comments
+    // comments input + autogrow
     chkBody.querySelectorAll("textarea[data-f='comment']").forEach(tx=>{
       tx.addEventListener("input", ()=>{
+        autoGrow(tx);
         const key = tx.getAttribute("data-k");
         const r = current.rows.find(x=>x.key===key);
         if(!r) return;
@@ -567,23 +580,18 @@
         current.updatedAt = new Date().toISOString();
         updateHints();
       });
+      // initial grow for loaded values
+      autoGrow(tx);
     });
   }
 
-  function segmented(key, field, currentValue, isDone){
-    // ✓ and X must display when selected.
-    const yesClass = (currentValue==="yes") ? `on ${isDone?'ok':'ok'}` : "";
-    const noClass  = (currentValue==="no")  ? `on no` : "";
-    const clearClass = (currentValue==="") ? "on" : "";
-
-    // For clarity: keep clear button as "–"
-    return `
-      <div class="seg" role="group" aria-label="${field}">
-        <button type="button" class="${yesClass}" data-set="yes" data-k="${key}" data-f="${field}" title="✓">✓</button>
-        <button type="button" class="${noClass}" data-set="no" data-k="${key}" data-f="${field}" title="X">X</button>
-        <button type="button" class="${clearClass}" data-set="clear" data-k="${key}" data-f="${field}" title="Ryd">–</button>
-      </div>
-    `;
+  function autoGrow(el){
+    if(!el) return;
+    el.style.height = "auto";
+    el.style.height = (el.scrollHeight + 2) + "px";
+  }
+  function autoGrowAllTextareas(){
+    document.querySelectorAll("textarea").forEach(t=>autoGrow(t));
   }
 
   function updateHints(){
@@ -592,7 +600,6 @@
     const doneYes = items.filter(r=>r.done==="yes").length;
     const doneNo = items.filter(r=>r.done==="no").length;
     const eroYes = items.filter(r=>r.eropex==="yes").length;
-
     saveHint.textContent = `Udført: ✓=${doneYes}, X=${doneNo}. Fejlmeldt i eROPEX (✓): ${eroYes}.`;
   }
 
@@ -607,16 +614,6 @@
     if(idx >= 0) all[idx] = current;
     else all.push(current);
     saveAll(all);
-  }
-
-  // ---------- Helpers ----------
-  function escapeHtml(s){
-    return String(s ?? "")
-      .replaceAll("&","&amp;")
-      .replaceAll("<","&lt;")
-      .replaceAll(">","&gt;")
-      .replaceAll('"',"&quot;")
-      .replaceAll("'","&#039;");
   }
 
   // ---------- Events ----------
@@ -650,23 +647,28 @@
   });
 
   btnPdf.addEventListener("click", ()=>{
-    // Ensure latest values are in model before printing
     if(!current) return;
     upsertCurrent();
-    window.print();
+    autoGrowAllTextareas();
+    window.print(); // brug "Gem som PDF" i dialogen
   });
 
-  // Keep model updated for header fields
+  // keep model updated
   dt.addEventListener("input", ()=>{ if(current){ current.datetime = dt.value; current.updatedAt = new Date().toISOString(); }});
   sig.addEventListener("input", ()=>{ if(current){ current.signature = sig.value; current.updatedAt = new Date().toISOString(); }});
-  globalNote.addEventListener("input", ()=>{ if(current){ current.globalNote = globalNote.value; current.updatedAt = new Date().toISOString(); }});
+  globalNote.addEventListener("input", ()=>{
+    if(current){
+      current.globalNote = globalNote.value;
+      current.updatedAt = new Date().toISOString();
+    }
+    autoGrow(globalNote);
+  });
 
-  // ---------- Init ----------
   (function init(){
+    autoGrow(globalNote);
     renderSaved();
     showHome();
   })();
 </script>
 </body>
 </html>
-
