@@ -22,38 +22,41 @@
       font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
       background:var(--bg);
       color:var(--text);
+      font-size:18px;
     }
     header{
       background:linear-gradient(90deg,var(--rw-red),var(--rw-darkred));
       color:#fff;
-      padding:16px 18px;
+      padding:20px 24px;
       display:flex;
       align-items:center;
       justify-content:space-between;
       gap:12px;
+      flex-wrap:wrap;
     }
     header h1{
       margin:0;
-      font-size:16px;
+      font-size:24px;
       letter-spacing:.3px;
       font-weight:700;
     }
-    .wrap{max-width:1100px;margin:0 auto;padding:16px}
-    .row{display:flex;gap:12px;flex-wrap:wrap}
+    .wrap{max-width:1600px;margin:0 auto;padding:20px}
+    .row{display:flex;gap:16px;flex-wrap:wrap}
     .card{
       background:var(--card);
       border:1px solid var(--line);
-      border-radius:12px;
-      padding:14px;
+      border-radius:14px;
+      padding:18px;
       box-shadow:0 1px 0 rgba(0,0,0,.03);
     }
-    .card h2{margin:0 0 10px 0;font-size:14px}
-    .muted{color:var(--muted);font-size:12px}
+    .card h2{margin:0 0 12px 0;font-size:22px}
+    .muted{color:var(--muted);font-size:15px}
     button{
       border:0;
-      border-radius:10px;
-      padding:10px 12px;
+      border-radius:12px;
+      padding:14px 18px;
       font-weight:700;
+      font-size:18px;
       cursor:pointer;
       background:#111827;
       color:#fff;
@@ -66,26 +69,26 @@
     .list{
       width:100%;
       border-collapse:collapse;
-      font-size:13px;
+      font-size:17px;
     }
     .list th,.list td{
-      padding:10px 8px;
+      padding:14px 10px;
       border-bottom:1px solid var(--line);
       vertical-align:top;
     }
-    .list th{color:#374151;text-align:left;font-size:12px}
+    .list th{color:#374151;text-align:left;font-size:16px}
     .pill{
       display:inline-block;
-      padding:2px 8px;
+      padding:5px 10px;
       border-radius:999px;
-      font-size:12px;
+      font-size:15px;
       border:1px solid var(--line);
       background:#fafafa;
     }
     .grid-2{
       display:grid;
       grid-template-columns: 1fr 1fr;
-      gap:12px;
+      gap:16px;
       width:100%;
     }
     @media (max-width: 900px){
@@ -96,86 +99,35 @@
       width:100%;
       border-collapse:separate;
       border-spacing:0;
-      font-size:13px;
-      table-layout:fixed;
+      font-size:18px;
     }
     .chk th,.chk td{
       border-bottom:1px solid var(--line);
-      padding:10px 8px;
+      padding:14px 10px;
       vertical-align:top;
-      word-wrap:break-word;
-      overflow-wrap:anywhere;
     }
     .chk thead th{
-      position:sticky;
-      top:0;
       background:var(--card);
-      z-index:2;
-      font-size:12px;
+      z-index:1;
+      font-size:16px;
       color:#374151;
-    }
-
-    .category-wrap{
-      margin-top:12px;
-      border:1px solid var(--line);
-      border-radius:12px;
-      overflow:hidden;
-      background:#fff;
-    }
-    .category-head{
-      width:100%;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
-      background:#fbfbfc;
-      color:#111827;
-      padding:14px 16px;
-      font-size:15px;
-      font-weight:800;
-      border:0;
-      border-bottom:1px solid var(--line);
-      border-radius:0;
-    }
-    .category-head:hover{
-      background:#f4f5f7;
-    }
-    .category-title{
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
-    .arrow{
-      display:inline-block;
-      transition:transform .2s ease;
-      font-size:14px;
-      color:var(--rw-red);
-    }
-    .category-wrap.open .arrow{
-      transform:rotate(90deg);
-    }
-    .category-body{
-      display:none;
-      overflow:auto;
-    }
-    .category-wrap.open .category-body{
-      display:block;
     }
 
     .note-red{color:var(--rw-red);font-weight:800}
     .note-red.block{display:block}
-    .actions{display:flex;gap:8px;flex-wrap:wrap}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
     .input, textarea{
       width:100%;
-      padding:9px 10px;
-      border-radius:10px;
+      padding:12px 14px;
+      border-radius:12px;
       border:1px solid var(--line);
       outline:none;
       font:inherit;
       background:#fff;
+      font-size:18px;
     }
     textarea{
-      min-height:64px;
+      min-height:80px;
       resize:none;
       overflow:hidden;
       line-height:1.4;
@@ -184,62 +136,78 @@
     .seg{
       display:inline-flex;
       border:1px solid var(--line);
-      border-radius:10px;
+      border-radius:12px;
       overflow:hidden;
       background:#fff;
     }
     .seg button{
       border-radius:0;
-      padding:8px 14px;
+      padding:12px 18px;
       background:#fff;
       color:#111827;
       border-right:1px solid var(--line);
       font-weight:900;
-      min-width:48px;
+      font-size:20px;
+      min-width:60px;
     }
     .seg button:last-child{border-right:0}
-    .seg button.on.ok{
-      background:var(--rw-teal);
-      color:#fff;
-    }
-    .seg button.on.no{
-      background:var(--rw-gray);
-      color:#fff;
-    }
+    .seg button.on.ok{background:var(--rw-teal);color:#fff}
+    .seg button.on.no{background:var(--rw-gray);color:#fff}
 
-    .small{font-size:12px}
+    .small{font-size:15px}
     .hidden{display:none !important;}
     .topbar{
       display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
       margin-bottom:12px;
     }
 
-    @media (max-width:900px){
-      .chk th:nth-child(1), .chk td:nth-child(1){width:auto !important;min-width:220px}
-      .chk th:nth-child(2), .chk td:nth-child(2){width:120px !important}
-      .chk th:nth-child(3), .chk td:nth-child(3){width:150px !important}
-      .chk th:nth-child(4), .chk td:nth-child(4){min-width:220px !important}
+    .section-block{
+      border:1px solid var(--line);
+      border-radius:14px;
+      margin-bottom:16px;
+      overflow:hidden;
+      background:#fff;
+    }
+    .section-header{
+      width:100%;
+      text-align:left;
+      background:#f3f4f6;
+      color:#111827;
+      padding:18px 20px;
+      border:0;
+      font-size:20px;
+      font-weight:800;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      cursor:pointer;
+    }
+    .section-header:hover{
+      background:#eaecef;
+    }
+    .section-content{
+      padding:0;
+      display:none;
+    }
+    .section-content.open{
+      display:block;
+    }
+    .arrow{
+      font-size:20px;
+      font-weight:900;
     }
 
     @media print{
-      header, #btnSave, #btnBack, #btnPdf, #btnDelete, #btnHome, #btnNew, #btnNew2, #btnClearAll {
-        display:none !important;
-      }
-      body{background:#fff}
-      .wrap{padding:0}
+      header, #btnSave, #btnBack, #btnPdf, #btnDelete, #btnHome, #btnNew, #btnNew2, #btnClearAll { display:none !important; }
+      body{background:#fff;font-size:14px}
+      .wrap{padding:0;max-width:none}
       .card{border:0;box-shadow:none}
       .seg{border:0}
-      .seg button{border:1px solid #ccc}
+      .seg button{border:1px solid #ccc;padding:6px 10px;font-size:14px}
       .input, textarea{border:0}
-      .category-body{display:block !important; overflow:visible !important;}
-      .category-wrap{break-inside:avoid; page-break-inside:avoid;}
-      .chk thead th{
-        position:static;
-      }
-      textarea{
-        min-height:auto;
-        height:auto !important;
-      }
+      .section-content{display:block !important}
+      .section-header{background:#fff;border-bottom:1px solid #ccc}
+      textarea{min-height:auto;height:auto;overflow:visible}
     }
   </style>
 </head>
@@ -247,8 +215,8 @@
 <header>
   <h1>LAMEL RENGØRING TJEKLISTE</h1>
   <div class="actions">
-    <button class="ghost" id="btnHome" title="Til oversigt">Oversigt</button>
-    <button id="btnNew" title="Ny tjekliste">Ny liste</button>
+    <button class="ghost" id="btnHome">Oversigt</button>
+    <button id="btnNew">Ny liste</button>
   </div>
 </header>
 
@@ -261,7 +229,7 @@
       </div>
       <div class="actions">
         <button id="btnNew2">Ny liste</button>
-        <button class="secondary" id="btnClearAll" title="Slet alle gemte lister">Slet alle</button>
+        <button class="secondary" id="btnClearAll">Slet alle</button>
       </div>
     </div>
 
@@ -302,7 +270,7 @@
           <button id="btnSave">Gem</button>
           <button class="secondary" id="btnBack">Tilbage</button>
           <button class="secondary" id="btnPdf">Lav PDF</button>
-          <button class="danger" id="btnDelete" title="Slet denne tjekliste">Slet</button>
+          <button class="danger" id="btnDelete">Slet</button>
         </div>
         <div id="saveHint" class="muted small" style="margin-top:10px"></div>
       </div>
@@ -310,28 +278,26 @@
       <div class="card">
         <h2>Noter til hele listen (valgfri)</h2>
         <textarea id="globalNote" placeholder="Skriv evt. generelle bemærkninger..."></textarea>
-        <div class="muted small" style="margin-top:8px">
-          Tip: Kommentarer pr. punkt findes i tabellen.
-        </div>
       </div>
     </div>
 
-    <div id="categoryContainer" style="margin-top:12px;"></div>
+    <div class="card" style="margin-top:12px;">
+      <h2>Tjekliste</h2>
+      <div id="sectionsWrap"></div>
+    </div>
   </section>
 </div>
 
 <script>
-const STORAGE_KEY = "lamel_rengoering_tjeklister_v2_foldere";
+const STORAGE_KEY = "lamel_rengoering_tjeklister_v3";
 
 const CHECKLIST = [
   { type:"topic", text:"Limkar" },
   { type:"item", text:"Tøm vand fra de 2 kar over i palletanken" },
   { type:"item", text:"Rengør de 2 limkar" },
   { type:"item", text:"Skift folie på valser på rullebord efter limkar, hvis nødvendigt" },
-  { type:"item", text:'NB! Opstil skilte om støv i område "SKAL stå med RØD skrift"', redMain:true },
-  { type:"item", text:"Gulv blæses ren over mod væg op til pause", noteLines:[
-    { text:"(OBS! Husk støvmaske og evt. dragt)", red:true }
-  ]},
+  { type:"item", text:'NB! Opstil skilte om støv i område "SKAL stå med RØD skrift"', noteRed:true },
+  { type:"item", text:"Gulv blæses ren over mod væg op til pause", noteLines:[{ text:"(OBS! Husk støvmaske og evt. dragt)", red:true }]},
   { type:"item", text:"Hæld vand i begge kar med ca. 1 deciliter brun sæbe i hvert kar" },
   { type:"item", text:"Rengøring af limområde" },
   { type:"item", text:"Rengøring af gribere" },
@@ -354,24 +320,18 @@ const CHECKLIST = [
   { type:"item", text:'Rengør land fra vinkeloverføring til pendulsav ”jernbane"' },
 
   { type:"topic", text:"Opruller" },
-  { type:"item", text:"Støvsug anlæg", noteLines:[
-    { text:"(OBS! Må ikke blæses støv på sensorer m.v.)", red:true }
-  ]},
+  { type:"item", text:"Støvsug anlæg", noteLines:[{ text:"(OBS! Må ikke blæses støv på sensorer m.v.)", red:true }]},
   { type:"item", text:"Svejsebjælke efterses for aflejringer" },
   { type:"item", text:"Vend kniven til ubrugt skær / skift kniv" },
   { type:"item", text:"Transport bånd støvsuges" },
   { type:"item", text:"Fremføringshjul til folie kontrolleres for aflejring og aftørres" },
-  { type:"item", text:"Følere aftørres", noteLines:[
-    { text:"(NB! Brug Honeywell Clear + microfiberklude)", red:true }
-  ]},
+  { type:"item", text:"Følere aftørres", noteLines:[{ text:"(NB! Brug Honeywell Clear + microfiberklude)", red:true }]},
 
   { type:"topic", text:"Vikler" },
   { type:"item", text:"Skifte kniv efter behov" },
 
   { type:"topic", text:"Anlægget" },
-  { type:"item", text:"Aftørring af scannere, sensorer og følere", noteLines:[
-    { text:"(NB! Brug Honeywell Clear + microfiberklude)", red:true }
-  ]},
+  { type:"item", text:"Aftørring af scannere, sensorer og følere", noteLines:[{ text:"(NB! Brug Honeywell Clear + microfiberklude)", red:true }]},
   { type:"item", text:"Støvsug opruller-, vikler-, pallemagasin områder samt bag anlæg m.v." },
   { type:"item", text:"Tjek etiketprinterne" },
 
@@ -388,15 +348,14 @@ function uid(){
   return "id_" + Math.random().toString(16).slice(2) + "_" + Date.now().toString(16);
 }
 function loadAll(){
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]"); }
-  catch(e){ return []; }
+  try{return JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]")}catch(e){return []}
 }
 function saveAll(arr){
   localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
 }
 function nowLocalInputValue(){
   const d = new Date();
-  const pad = n => String(n).padStart(2, "0");
+  const pad = n => String(n).padStart(2,"0");
   return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 function escapeHtml(s){
@@ -407,17 +366,11 @@ function escapeHtml(s){
     .replaceAll('"',"&quot;")
     .replaceAll("'","&#039;");
 }
-function formatDateTime(iso){
-  if(!iso) return "";
-  const d = new Date(iso);
-  return d.toLocaleString("da-DK");
-}
 
 let current = null;
 
 const viewHome = document.getElementById("viewHome");
 const viewForm = document.getElementById("viewForm");
-
 const btnHome = document.getElementById("btnHome");
 const btnNew = document.getElementById("btnNew");
 const btnNew2 = document.getElementById("btnNew2");
@@ -426,15 +379,19 @@ const btnSave = document.getElementById("btnSave");
 const btnPdf = document.getElementById("btnPdf");
 const btnDelete = document.getElementById("btnDelete");
 const btnClearAll = document.getElementById("btnClearAll");
-
 const savedTbody = document.getElementById("savedTbody");
 const noSaved = document.getElementById("noSaved");
-
 const dt = document.getElementById("dt");
 const sig = document.getElementById("sig");
 const globalNote = document.getElementById("globalNote");
 const saveHint = document.getElementById("saveHint");
-const categoryContainer = document.getElementById("categoryContainer");
+const sectionsWrap = document.getElementById("sectionsWrap");
+
+function formatDateTime(iso){
+  if(!iso) return "";
+  const d = new Date(iso);
+  return d.toLocaleString("da-DK");
+}
 
 function showHome(){
   viewHome.classList.remove("hidden");
@@ -446,26 +403,43 @@ function showForm(){
   viewForm.classList.remove("hidden");
 }
 
-function buildRows(){
-  return CHECKLIST.map((x, idx)=>{
-    if(x.type === "topic"){
-      return {
-        key:`t_${idx}`,
-        type:"topic",
-        text:x.text,
-        open:false
-      };
-    }
-    return {
-      key:`i_${idx}`,
-      type:"item",
-      text:x.text,
-      redMain: !!x.redMain,
-      noteLines: x.noteLines || [],
-      done:"",
-      eropex:"",
-      comment:""
-    };
+function renderSaved(){
+  const all = loadAll().sort((a,b)=> (b.updatedAt||"").localeCompare(a.updatedAt||""));
+  savedTbody.innerHTML = "";
+  noSaved.style.display = all.length ? "none" : "block";
+
+  for(const item of all){
+    const doneCount = (item.rows||[]).filter(r=>r.type==="item" && r.done==="yes").length;
+    const totalCount = (item.rows||[]).filter(r=>r.type==="item").length;
+    const status = `${doneCount}/${totalCount} udført`;
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${formatDateTime(item.datetime)}</td>
+      <td>${escapeHtml(item.signature || "")}</td>
+      <td><span class="pill">${status}</span></td>
+      <td>
+        <div class="actions">
+          <button class="secondary" data-open="${item.id}">Åbn</button>
+          <button class="danger" data-del="${item.id}">Slet</button>
+        </div>
+      </td>
+    `;
+    savedTbody.appendChild(tr);
+  }
+
+  savedTbody.querySelectorAll("[data-open]").forEach(b=>{
+    b.addEventListener("click", ()=> openChecklist(b.getAttribute("data-open")));
+  });
+  savedTbody.querySelectorAll("[data-del]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const id = b.getAttribute("data-del");
+      if(confirm("Vil du slette denne tjekliste?")){
+        const all = loadAll().filter(x=>x.id!==id);
+        saveAll(all);
+        renderSaved();
+      }
+    });
   });
 }
 
@@ -477,219 +451,165 @@ function newChecklist(){
     globalNote: "",
     createdAt: new Date().toISOString(),
     updatedAt: new Date().toISOString(),
-    rows: buildRows()
+    rows: CHECKLIST.map((x, idx)=>{
+      if(x.type==="topic"){
+        return { key:`t_${idx}`, type:"topic", text:x.text, open:false };
+      }
+      return {
+        key:`i_${idx}`,
+        type:"item",
+        text:x.text,
+        noteLines:x.noteLines || [],
+        noteRed:!!x.noteRed,
+        done:"",
+        eropex:"",
+        comment:""
+      };
+    })
   };
 
   dt.value = current.datetime;
-  sig.value = current.signature;
-  globalNote.value = current.globalNote;
-  renderChecklist();
+  sig.value = "";
+  globalNote.value = "";
+  renderChecklistSections();
   updateHints();
   showForm();
 }
 
 function openChecklist(id){
   const all = loadAll();
-  const found = all.find(x => x.id === id);
-  if(!found){
-    alert("Kunne ikke finde tjeklisten.");
-    return;
-  }
-
+  const found = all.find(x=>x.id===id);
+  if(!found) return alert("Kunne ikke finde tjeklisten.");
   current = found;
-
-  if(current.rows){
-    let currentTopic = null;
-    for(const row of current.rows){
-      if(row.type === "topic"){
-        if(typeof row.open !== "boolean") row.open = false;
-        currentTopic = row;
-      }
-    }
-  }
-
   dt.value = current.datetime || nowLocalInputValue();
   sig.value = current.signature || "";
   globalNote.value = current.globalNote || "";
-  renderChecklist();
+  renderChecklistSections();
   updateHints();
   showForm();
 }
 
-function renderSaved(){
-  const all = loadAll().sort((a,b)=> (b.updatedAt||"").localeCompare(a.updatedAt||""));
-  savedTbody.innerHTML = "";
-  noSaved.style.display = all.length ? "none" : "block";
-
-  for(const item of all){
-    const doneCount = (item.rows||[]).filter(r=>r.type==="item" && r.done==="yes").length;
-    const totalCount = (item.rows||[]).filter(r=>r.type==="item").length;
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${formatDateTime(item.datetime)}</td>
-      <td>${escapeHtml(item.signature || "")}</td>
-      <td><span class="pill">${doneCount}/${totalCount} udført</span></td>
-      <td>
-        <div class="actions">
-          <button class="secondary" data-open="${item.id}">Åbn</button>
-          <button class="danger" data-del="${item.id}">Slet</button>
-        </div>
-      </td>
-    `;
-    savedTbody.appendChild(tr);
-  }
-
-  savedTbody.querySelectorAll("[data-open]").forEach(btn=>{
-    btn.addEventListener("click", ()=> openChecklist(btn.getAttribute("data-open")));
-  });
-
-  savedTbody.querySelectorAll("[data-del]").forEach(btn=>{
-    btn.addEventListener("click", ()=>{
-      const id = btn.getAttribute("data-del");
-      if(confirm("Vil du slette denne tjekliste?")){
-        const all = loadAll().filter(x=>x.id!==id);
-        saveAll(all);
-        renderSaved();
-      }
-    });
-  });
-}
-
-function renderChecklist(){
-  categoryContainer.innerHTML = "";
-  if(!current || !current.rows) return;
-
-  let categories = [];
-  let activeCategory = null;
-
-  for(const row of current.rows){
+function groupedRows(rows){
+  const groups = [];
+  let currentGroup = null;
+  for(const row of rows){
     if(row.type === "topic"){
-      activeCategory = {
-        topic: row,
-        items: []
-      };
-      categories.push(activeCategory);
-    } else if(activeCategory){
-      activeCategory.items.push(row);
+      currentGroup = { topic: row, items: [] };
+      groups.push(currentGroup);
+    } else if(currentGroup){
+      currentGroup.items.push(row);
     }
   }
+  return groups;
+}
 
-  categories.forEach(cat => {
-    const wrap = document.createElement("div");
-    wrap.className = "category-wrap" + (cat.topic.open ? " open" : "");
+function renderChecklistSections(){
+  sectionsWrap.innerHTML = "";
+  const groups = groupedRows(current.rows);
 
-    const head = document.createElement("button");
-    head.type = "button";
-    head.className = "category-head";
-    head.innerHTML = `
-      <span class="category-title">
-        <span class="arrow">▶</span>
-        <span>${escapeHtml(cat.topic.text)}</span>
-      </span>
-      <span class="muted">${cat.items.filter(x=>x.done==="yes").length}/${cat.items.length} udført</span>
+  groups.forEach(group=>{
+    const block = document.createElement("div");
+    block.className = "section-block";
+
+    const header = document.createElement("button");
+    header.className = "section-header";
+    header.type = "button";
+    header.innerHTML = `
+      <span>${escapeHtml(group.topic.text)}</span>
+      <span class="arrow">${group.topic.open ? "▾" : "▸"}</span>
     `;
 
-    head.addEventListener("click", ()=>{
-      cat.topic.open = !cat.topic.open;
-      current.updatedAt = new Date().toISOString();
-      renderChecklist();
-    });
+    const content = document.createElement("div");
+    content.className = "section-content" + (group.topic.open ? " open" : "");
 
-    const body = document.createElement("div");
-    body.className = "category-body";
-    body.innerHTML = `
+    let tableHtml = `
       <table class="chk">
         <thead>
           <tr>
-            <th style="width:42%;">Punkt</th>
-            <th style="width:14%;">Udført</th>
-            <th style="width:18%;">Fejlmeldt i eROPEX</th>
-            <th style="width:26%;">Kommentar</th>
+            <th style="width:50%">Punkt</th>
+            <th style="width:15%">Udført</th>
+            <th style="width:15%">Fejlmeldt i eROPEX</th>
+            <th style="width:20%">Kommentar</th>
           </tr>
         </thead>
         <tbody>
-          ${cat.items.map(row => `
-            <tr>
-              <td>${renderPointCell(row)}</td>
-              <td>${segmented(row.key, "done", row.done, true)}</td>
-              <td>${segmented(row.key, "eropex", row.eropex, false)}</td>
-              <td>
-                <textarea data-k="${row.key}" data-f="comment" placeholder="Kommentar...">${escapeHtml(row.comment || "")}</textarea>
-              </td>
-            </tr>
-          `).join("")}
-        </tbody>
-      </table>
     `;
 
-    wrap.appendChild(head);
-    wrap.appendChild(body);
-    categoryContainer.appendChild(wrap);
+    group.items.forEach(row=>{
+      let pointHtml = row.noteRed
+        ? `<div class="note-red">${escapeHtml(row.text)}</div>`
+        : `<div>${escapeHtml(row.text)}</div>`;
+
+      if(Array.isArray(row.noteLines)){
+        row.noteLines.forEach(nl=>{
+          pointHtml += `<span class="${nl.red ? 'note-red' : ''} block">${escapeHtml(nl.text)}</span>`;
+        });
+      }
+
+      tableHtml += `
+        <tr>
+          <td>${pointHtml}</td>
+          <td>${segmented(row.key, "done", row.done)}</td>
+          <td>${segmented(row.key, "eropex", row.eropex)}</td>
+          <td><textarea data-k="${row.key}" data-f="comment" placeholder="Kommentar...">${escapeHtml(row.comment || "")}</textarea></td>
+        </tr>
+      `;
+    });
+
+    tableHtml += `</tbody></table>`;
+    content.innerHTML = tableHtml;
+
+    header.addEventListener("click", ()=>{
+      group.topic.open = !group.topic.open;
+      renderChecklistSections();
+    });
+
+    block.appendChild(header);
+    block.appendChild(content);
+    sectionsWrap.appendChild(block);
   });
 
-  wireChecklistEvents();
-  autoGrowAll();
-}
-
-function renderPointCell(row){
-  let html = row.redMain
-    ? `<div class="note-red">${escapeHtml(row.text)}</div>`
-    : `<div>${escapeHtml(row.text)}</div>`;
-
-  if(Array.isArray(row.noteLines)){
-    for(const nl of row.noteLines){
-      html += `<span class="${nl.red ? 'note-red' : ''} block">${escapeHtml(nl.text)}</span>`;
-    }
-  }
-  return html;
-}
-
-function segmented(key, field, currentValue, isDone){
-  const yesClass = currentValue === "yes" ? "on ok" : "";
-  const noClass = currentValue === "no" ? "on no" : "";
-  return `
-    <div class="seg" role="group" aria-label="${field}">
-      <button type="button" class="${yesClass}" data-set="yes" data-k="${key}" data-f="${field}">✓</button>
-      <button type="button" class="${noClass}" data-set="no" data-k="${key}" data-f="${field}">X</button>
-    </div>
-  `;
-}
-
-function wireChecklistEvents(){
-  categoryContainer.querySelectorAll("[data-set]").forEach(btn=>{
+  sectionsWrap.querySelectorAll("[data-set]").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const key = btn.getAttribute("data-k");
       const field = btn.getAttribute("data-f");
       const value = btn.getAttribute("data-set");
       const row = current.rows.find(x=>x.key===key);
       if(!row) return;
-
       row[field] = value;
       current.updatedAt = new Date().toISOString();
-      renderChecklist();
+      renderChecklistSections();
       updateHints();
     });
   });
 
-  categoryContainer.querySelectorAll("textarea[data-f='comment']").forEach(tx=>{
+  sectionsWrap.querySelectorAll("textarea[data-f='comment']").forEach(tx=>{
+    autoGrow(tx);
     tx.addEventListener("input", ()=>{
+      autoGrow(tx);
       const key = tx.getAttribute("data-k");
       const row = current.rows.find(x=>x.key===key);
       if(!row) return;
       row.comment = tx.value;
       current.updatedAt = new Date().toISOString();
-      autoGrow(tx);
     });
-    autoGrow(tx);
   });
+}
+
+function segmented(key, field, currentValue){
+  const yesClass = currentValue==="yes" ? "on ok" : "";
+  const noClass = currentValue==="no" ? "on no" : "";
+  return `
+    <div class="seg">
+      <button type="button" class="${yesClass}" data-set="yes" data-k="${key}" data-f="${field}">✓</button>
+      <button type="button" class="${noClass}" data-set="no" data-k="${key}" data-f="${field}">X</button>
+    </div>
+  `;
 }
 
 function autoGrow(el){
   el.style.height = "auto";
-  el.style.height = el.scrollHeight + "px";
-}
-function autoGrowAll(){
-  document.querySelectorAll("textarea").forEach(autoGrow);
+  el.style.height = (el.scrollHeight) + "px";
 }
 
 function updateHints(){
@@ -702,7 +622,6 @@ function updateHints(){
 }
 
 function upsertCurrent(){
-  if(!current) return;
   current.datetime = dt.value || nowLocalInputValue();
   current.signature = sig.value || "";
   current.globalNote = globalNote.value || "";
@@ -747,55 +666,22 @@ btnClearAll.addEventListener("click", ()=>{
 btnPdf.addEventListener("click", ()=>{
   if(!current) return;
   upsertCurrent();
-
-  const oldStates = current.rows
-    .filter(r => r.type === "topic")
-    .map(r => ({ key:r.key, open:r.open }));
-
-  current.rows.forEach(r=>{
-    if(r.type === "topic") r.open = true;
-  });
-
-  renderChecklist();
-
-  setTimeout(()=>{
-    window.print();
-
-    current.rows.forEach(r=>{
-      if(r.type === "topic"){
-        const old = oldStates.find(x=>x.key===r.key);
-        if(old) r.open = old.open;
-      }
-    });
-    renderChecklist();
-  }, 150);
+  const allSections = current.rows.filter(r=>r.type==="topic");
+  allSections.forEach(topic=>topic.open = true);
+  renderChecklistSections();
+  setTimeout(()=>window.print(), 200);
 });
 
-dt.addEventListener("input", ()=>{
-  if(current){
-    current.datetime = dt.value;
-    current.updatedAt = new Date().toISOString();
-  }
-});
-sig.addEventListener("input", ()=>{
-  if(current){
-    current.signature = sig.value;
-    current.updatedAt = new Date().toISOString();
-  }
-});
+dt.addEventListener("input", ()=>{ if(current){ current.datetime = dt.value; current.updatedAt = new Date().toISOString(); }});
+sig.addEventListener("input", ()=>{ if(current){ current.signature = sig.value; current.updatedAt = new Date().toISOString(); }});
 globalNote.addEventListener("input", ()=>{
-  if(current){
-    current.globalNote = globalNote.value;
-    current.updatedAt = new Date().toISOString();
-    autoGrow(globalNote);
-  }
+  autoGrow(globalNote);
+  if(current){ current.globalNote = globalNote.value; current.updatedAt = new Date().toISOString(); }
 });
 
-(function init(){
-  renderSaved();
-  autoGrowAll();
-  showHome();
-})();
+autoGrow(globalNote);
+renderSaved();
+showHome();
 </script>
 </body>
 </html>
