@@ -577,19 +577,20 @@ function renderChecklistSections(){
     sectionsWrap.appendChild(block);
   });
 
-   sectionsWrap.querySelectorAll("[data-set]").forEach(btn=>{
+     sectionsWrap.querySelectorAll("[data-set]").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const key = btn.getAttribute("data-k");
       const field = btn.getAttribute("data-f");
       const value = btn.getAttribute("data-set");
       const row = current.rows.find(x=>x.key===key);
       if(!row) return;
-      // Toggle: hvis samme værdi allerede er sat, nulstil den
-      row[field] = (row[field] === value) ? "" : value;
+      row[field] = value;
       current.updatedAt = new Date().toISOString();
       renderChecklistSections();
       updateHints();
     });
+  });
+
   });
 
   });
