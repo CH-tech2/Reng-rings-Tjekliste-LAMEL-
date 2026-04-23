@@ -198,7 +198,7 @@
     }
 
     @media print{
-      header, #btnSave, #btnBack, #btnPdf, #btnDelete, #btnHome, #btnNew, #btnNew2, #btnClearAll { display:none !important; }
+      header, #btnSave, #btnBack, #btnPdf, #btnSendPdf, #btnDelete, #btnHome, #btnNew, #btnNew2, #btnClearAll { display:none !important; }
       body{background:#fff;font-size:14px}
       .wrap{padding:0;max-width:none}
       .card{border:0;box-shadow:none}
@@ -244,7 +244,7 @@
       </thead>
       <tbody id="savedTbody"></tbody>
     </table>
-    <div id="noSaved" class="muted" style="padding:10px 0;display:none;">Ingen gemte tjeklister endnu. Tryk “Ny liste”.</div>
+    <div id="noSaved" class="muted" style="padding:10px 0;display:none;">Ingen gemte tjeklister endnu. Tryk "Ny liste".</div>
   </section>
 
   <section id="viewForm" class="hidden">
@@ -270,6 +270,7 @@
           <button id="btnSave">Gem</button>
           <button class="secondary" id="btnBack">Tilbage</button>
           <button class="secondary" id="btnPdf">Lav PDF</button>
+          <button id="btnSendPdf" style="background:var(--rw-teal)">Send PDF via Gmail</button>
           <button class="danger" id="btnDelete">Slet</button>
         </div>
         <div id="saveHint" class="muted small" style="margin-top:10px"></div>
@@ -307,17 +308,14 @@ const CHECKLIST = [
   { type:"item", text:"Plastik på front af emhætte efter behov" },
   { type:"item", text:"Rengøring af følere" },
 
-  { type:"topic", text:"Battmobil" },
-  { type:"item", text:"Rense under løftebord" },
-
   { type:"topic", text:"Overflade- og pendulsav" },
   { type:"item", text:"Sørge for klinger til overfladesav" },
-  { type:"item", text:'Tjek/rengør land v. pendulsav ”landevej"' },
+  { type:"item", text:'Tjek/rengør land v. pendulsav "landevej"' },
   { type:"item", text:"Pendulsav rengøres / blæses ren" },
   { type:"item", text:"Feje under maskine, langs kanter og hjørner" },
   { type:"item", text:"Feje under dørkplader JB-side" },
   { type:"item", text:"Rengøre v. trækaksel og motor" },
-  { type:"item", text:'Rengør land fra vinkeloverføring til pendulsav ”jernbane"' },
+  { type:"item", text:'Rengør land fra vinkeloverføring til pendulsav "jernbane"' },
 
   { type:"topic", text:"Opruller" },
   { type:"item", text:"Støvsug anlæg", noteLines:[{ text:"(OBS! Må ikke blæses støv på sensorer m.v.)", red:true }]},
@@ -377,6 +375,7 @@ const btnNew2 = document.getElementById("btnNew2");
 const btnBack = document.getElementById("btnBack");
 const btnSave = document.getElementById("btnSave");
 const btnPdf = document.getElementById("btnPdf");
+const btnSendPdf = document.getElementById("btnSendPdf");
 const btnDelete = document.getElementById("btnDelete");
 const btnClearAll = document.getElementById("btnClearAll");
 const savedTbody = document.getElementById("savedTbody");
@@ -670,6 +669,39 @@ btnPdf.addEventListener("click", ()=>{
   allSections.forEach(topic=>topic.open = true);
   renderChecklistSections();
   setTimeout(()=>window.print(), 200);
+});
+
+btnSendPdf.addEventListener("click", ()=>{
+  if(!current) return;
+  upsertCurrent();
+
+  // Åbn alle sektioner så PDF'en viser alt
+  const allSections = current.rows.filter(r=>r.type==="topic");
+  allSections.forEach(topic=>topic.open = true);
+  renderChecklistSections();
+
+  // Vent lidt, print (gem som PDF), og åbn derefter Gmail
+  setTimeout(()=>{
+    window.print();
+
+    // Byg Gmail compose-link
+    const dato = current.datetime ? new Date(current.datetime).toLocaleString("da-DK") : "ukendt dato";
+    const navn = current.signature || "ukendt";
+    const subject = encodeURIComponent("Lamel Rengøring Tjekliste - " + dato);
+    const body = encodeURIComponent(
+      "Hej,\n\n" +
+      "Vedhæftet finder du tjeklisten for Lamel Rengøring.\n\n" +
+      "Dato: " + dato + "\n" +
+      "Underskrift: " + navn + "\n\n" +
+      "Husk at vedhæfte den gemte PDF-fil.\n\n" +
+      "Venlig hilsen\n" + navn
+    );
+    const gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&su=" + subject + "&body=" + body;
+
+    setTimeout(()=>{
+      window.open(gmailUrl, "_blank");
+    }, 500);
+  }, 200);
 });
 
 dt.addEventListener("input", ()=>{ if(current){ current.datetime = dt.value; current.updatedAt = new Date().toISOString(); }});
