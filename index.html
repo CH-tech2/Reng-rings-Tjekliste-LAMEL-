@@ -4,6 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LAMEL RENGØRING TJEKLISTE</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
   <style>
     :root{
       --rw-red:#D20014;
@@ -270,7 +272,7 @@
           <button id="btnSave">Gem</button>
           <button class="secondary" id="btnBack">Tilbage</button>
           <button class="secondary" id="btnPdf">Lav PDF</button>
-          <button id="btnSendPdf" style="background:var(--rw-teal)">Send PDF via Gmail</button>
+          <button id="btnSendPdf" style="background:var(--rw-teal)">Send PDF via Mail</button>
           <button class="danger" id="btnDelete">Slet</button>
         </div>
         <div id="saveHint" class="muted small" style="margin-top:10px"></div>
@@ -633,6 +635,107 @@ function upsertCurrent(){
   saveAll(all);
 }
 
+/* ============================================
+   PDF GENERATOR – bruger jsPDF + autoTable
+   ============================================ */
+function generateChecklistPDF(){
+  if(!current) return null;
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  const dato = current.datetime ? new Date(current.datetime).toLocaleString("da-DK") : "Ukendt dato";
+  const navn = current.signature || "Ukendt";
+
+  // Titel
+  doc.setFontSize(20);
+  doc.setTextColor(210, 0, 20); // Rockwool rød
+  doc.text("LAMEL RENGØRING TJEKLISTE", 14, 18);
+
+  // Meta-info
+  doc.setFontSize(11);
+  doc.setTextColor(60, 60, 60);
+  doc.text("Dato: " + dato, 14, 28);
+  doc.text("Underskrift: " + navn, 14, 34);
+
+  // Global note
+  if(current.globalNote && current.globalNote.trim()){
+    doc.setFontSize(10);
+    doc.setTextColor(100, 100, 100);
+    const noteLines = doc.splitTextToSize("Note: " + current.globalNote.trim(), 180);
+    doc.text(noteLines, 14, 42);
+  }
+
+  // Byg tabeldata grupperet per sektion
+  const groups = groupedRows(current.rows);
+  const tableHead = [["Punkt", "Udført", "Fejlmeldt eROPEX", "Kommentar"]];
+  const tableBody = [];
+
+  groups.forEach(group => {
+    // Sektion-header som en row
+    tableBody.push([{
+      content: group.topic.text,
+      colSpan: 4,
+      styles: { fillColor: [243, 244, 246], textColor: [17, 24, 39], fontStyle: 'bold', fontSize: 11 }
+    }]);
+
+    group.items.forEach(row => {
+      let punktText = row.text || "";
+      if(Array.isArray(row.noteLines)){
+        row.noteLines.forEach(nl => {
+          punktText += "\n" + (nl.text || "");
+        });
+      }
+
+      const done = row.done === "yes" ? "✓" : (row.done === "no" ? "X" : "—");
+      const eropex = row.eropex === "yes" ? "✓" : (row.eropex === "no" ? "X" : "—");
+      const comment = row.comment || "";
+
+      tableBody.push([punktText, done, eropex, comment]);
+    });
+  });
+
+  const startY = (current.globalNote && current.globalNote.trim()) ? 50 : 42;
+
+  doc.autoTable({
+    head: tableHead,
+    body: tableBody,
+    startY: startY,
+    theme: 'grid',
+    styles: { fontSize: 9, cellPadding: 4, overflow: 'linebreak' },
+    headStyles: { fillColor: [210, 0, 20], textColor: [255, 255, 255], fontStyle: 'bold' },
+    columnStyles: {
+      0: { cellWidth: 80 },
+      1: { cellWidth: 25, halign: 'center' },
+      2: { cellWidth: 30, halign: 'center' },
+      3: { cellWidth: 45 }
+    },
+    didParseCell: function(data){
+      // Farv ✓ grøn/teal og X grå
+      if(data.section === 'body' && (data.column.index === 1 || data.column.index === 2)){
+        if(data.cell.raw === "✓"){
+          data.cell.styles.textColor = [32, 134, 132]; // teal
+          data.cell.styles.fontStyle = 'bold';
+        } else if(data.cell.raw === "X"){
+          data.cell.styles.textColor = [101, 101, 101]; // grå
+          data.cell.styles.fontStyle = 'bold';
+        }
+      }
+    }
+  });
+
+  // Footer
+  const pageCount = doc.internal.getNumberOfPages();
+  for(let i = 1; i <= pageCount; i++){
+    doc.setPage(i);
+    doc.setFontSize(8);
+    doc.setTextColor(150);
+    doc.text("Lamel Rengøring Tjekliste — " + dato + " — Side " + i + "/" + pageCount, 14, doc.internal.pageSize.height - 10);
+  }
+
+  return doc;
+}
+
 btnHome.addEventListener("click", showHome);
 btnBack.addEventListener("click", showHome);
 btnNew.addEventListener("click", newChecklist);
@@ -662,46 +765,69 @@ btnClearAll.addEventListener("click", ()=>{
   }
 });
 
+/* "Lav PDF" – genererer og downloader PDF direkte */
 btnPdf.addEventListener("click", ()=>{
   if(!current) return;
   upsertCurrent();
-  const allSections = current.rows.filter(r=>r.type==="topic");
-  allSections.forEach(topic=>topic.open = true);
-  renderChecklistSections();
-  setTimeout(()=>window.print(), 200);
+  const doc = generateChecklistPDF();
+  if(!doc) return;
+
+  const dato = current.datetime ? new Date(current.datetime).toLocaleString("da-DK") : "tjekliste";
+  const filename = "Lamel_Rengoering_" + (current.signature || "tjekliste").replace(/\s+/g,"_") + "_" + dato.replace(/[\/\s:,]/g,"-") + ".pdf";
+
+  doc.save(filename);
 });
 
-btnSendPdf.addEventListener("click", ()=>{
+/* "Send PDF via Mail" – genererer PDF, forsøger share, ellers download + mailto */
+btnSendPdf.addEventListener("click", async ()=>{
   if(!current) return;
   upsertCurrent();
+  const doc = generateChecklistPDF();
+  if(!doc) return;
 
-  // Åbn alle sektioner så PDF'en viser alt
-  const allSections = current.rows.filter(r=>r.type==="topic");
-  allSections.forEach(topic=>topic.open = true);
-  renderChecklistSections();
+  const dato = current.datetime ? new Date(current.datetime).toLocaleString("da-DK") : "tjekliste";
+  const navn = current.signature || "ukendt";
+  const filename = "Lamel_Rengoering_" + navn.replace(/\s+/g,"_") + "_" + dato.replace(/[\/\s:,]/g,"-") + ".pdf";
 
-  // Vent lidt, print (gem som PDF), og åbn derefter Gmail
+  const pdfBlob = doc.output('blob');
+  const file = new File([pdfBlob], filename, { type: "application/pdf" });
+
+  // Forsøg Web Share API (virker på mobil og nyere browsere)
+  if(navigator.share && navigator.canShare && navigator.canShare({ files: [file] })){
+    try {
+      await navigator.share({
+        files: [file],
+        title: "Lamel Rengøring Tjekliste",
+        text: "Tjekliste for " + dato + " af " + navn
+      });
+      return; // Deling lykkedes
+    } catch(err){
+      if(err.name === 'AbortError') return; // Bruger annullerede
+      // Fald igennem til download+mailto
+    }
+  }
+
+  // Fallback: Download PDF og åbn mail-klient
+  const url = URL.createObjectURL(pdfBlob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
   setTimeout(()=>{
-    window.print();
-
-    // Byg Gmail compose-link
-    const dato = current.datetime ? new Date(current.datetime).toLocaleString("da-DK") : "ukendt dato";
-    const navn = current.signature || "ukendt";
     const subject = encodeURIComponent("Lamel Rengøring Tjekliste - " + dato);
     const body = encodeURIComponent(
       "Hej,\n\n" +
       "Vedhæftet finder du tjeklisten for Lamel Rengøring.\n\n" +
       "Dato: " + dato + "\n" +
       "Underskrift: " + navn + "\n\n" +
-      "Husk at vedhæfte den gemte PDF-fil.\n\n" +
+      "Husk at vedhæfte den downloadede PDF-fil.\n\n" +
       "Venlig hilsen\n" + navn
     );
-    const gmailUrl = "https://mail.google.com/mail/?view=cm&fs=1&su=" + subject + "&body=" + body;
-
-    setTimeout(()=>{
-      window.open(gmailUrl, "_blank");
-    }, 500);
-  }, 200);
+    window.location.href = "mailto:?subject=" + subject + "&body=" + body;
+  }, 500);
 });
 
 dt.addEventListener("input", ()=>{ if(current){ current.datetime = dt.value; current.updatedAt = new Date().toISOString(); }});
