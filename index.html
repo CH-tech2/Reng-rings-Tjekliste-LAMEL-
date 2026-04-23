@@ -378,21 +378,21 @@ let current = null;
 
 const viewHome = document.getElementById("viewHome");
 const viewForm = document.getElementById("viewForm");
-const btnHome = document.getElementById("btnHome");
-const btnNew = document.getElementById("btnNew");
-const btnNew2 = document.getElementById("btnNew2");
-const btnBack = document.getElementById("btnBack");
-const btnSave = document.getElementById("btnSave");
-const btnPdf = document.getElementById("btnPdf");
+const btnHome  = document.getElementById("btnHome");
+const btnNew   = document.getElementById("btnNew");
+const btnNew2  = document.getElementById("btnNew2");
+const btnBack  = document.getElementById("btnBack");
+const btnSave  = document.getElementById("btnSave");
+const btnPdf   = document.getElementById("btnPdf");
 const btnSendPdf = document.getElementById("btnSendPdf");
-const btnDelete = document.getElementById("btnDelete");
+const btnDelete  = document.getElementById("btnDelete");
 const btnClearAll = document.getElementById("btnClearAll");
-const savedTbody = document.getElementById("savedTbody");
-const noSaved = document.getElementById("noSaved");
-const dt = document.getElementById("dt");
-const sig = document.getElementById("sig");
-const globalNote = document.getElementById("globalNote");
-const saveHint = document.getElementById("saveHint");
+const savedTbody  = document.getElementById("savedTbody");
+const noSaved     = document.getElementById("noSaved");
+const dt          = document.getElementById("dt");
+const sig         = document.getElementById("sig");
+const globalNote  = document.getElementById("globalNote");
+const saveHint    = document.getElementById("saveHint");
 const sectionsWrap = document.getElementById("sectionsWrap");
 
 function formatDateTime(iso){
@@ -443,8 +443,8 @@ function renderSaved(){
     b.addEventListener("click", ()=>{
       const id = b.getAttribute("data-del");
       if(confirm("Vil du slette denne tjekliste?")){
-        const all = loadAll().filter(x=>x.id!==id);
-        saveAll(all);
+        const all2 = loadAll().filter(x=>x.id!==id);
+        saveAll(all2);
         renderSaved();
       }
     });
@@ -461,10 +461,10 @@ function newChecklist(){
     updatedAt: new Date().toISOString(),
     rows: CHECKLIST.map((x, idx)=>{
       if(x.type==="topic"){
-        return { key:`t_${idx}`, type:"topic", text:x.text, open:false };
+        return { key:"t_"+idx, type:"topic", text:x.text, open:false };
       }
       return {
-        key:`i_${idx}`,
+        key:"i_"+idx,
         type:"item",
         text:x.text,
         noteLines:x.noteLines || [],
@@ -746,6 +746,9 @@ function generateChecklistPDF(){
   return doc;
 }
 
+/* ============================================
+   EVENT LISTENERS
+   ============================================ */
 btnHome.addEventListener("click", showHome);
 btnBack.addEventListener("click", showHome);
 btnNew.addEventListener("click", newChecklist);
@@ -775,6 +778,7 @@ btnClearAll.addEventListener("click", ()=>{
   }
 });
 
+/* "Lav PDF" – genererer og downloader PDF direkte */
 btnPdf.addEventListener("click", ()=>{
   if(!current) return;
   upsertCurrent();
@@ -788,6 +792,7 @@ btnPdf.addEventListener("click", ()=>{
   doc.save(filename);
 });
 
+/* "Send PDF via Mail" – genererer PDF, forsøger share, ellers download + mailto */
 btnSendPdf.addEventListener("click", async ()=>{
   if(!current) return;
   upsertCurrent();
