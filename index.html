@@ -577,22 +577,19 @@ function renderChecklistSections(){
     sectionsWrap.appendChild(block);
   });
 
-     sectionsWrap.querySelectorAll("[data-set]").forEach(btn=>{
+  /* ✓/X knapper – med toggle (tryk igen for at fjerne markering) */
+  sectionsWrap.querySelectorAll("[data-set]").forEach(btn=>{
     btn.addEventListener("click", ()=>{
       const key = btn.getAttribute("data-k");
       const field = btn.getAttribute("data-f");
       const value = btn.getAttribute("data-set");
       const row = current.rows.find(x=>x.key===key);
       if(!row) return;
-      row[field] = value;
+      row[field] = (row[field] === value) ? "" : value;
       current.updatedAt = new Date().toISOString();
       renderChecklistSections();
       updateHints();
     });
-  });
-
-  });
-
   });
 
   sectionsWrap.querySelectorAll("textarea[data-f='comment']").forEach(tx=>{
@@ -666,12 +663,10 @@ function generateChecklistPDF(){
   const dato = current.datetime ? new Date(current.datetime).toLocaleString("da-DK") : "Ukendt dato";
   const navn = current.signature || "Ukendt";
 
-  // Titel
   doc.setFontSize(20);
   doc.setTextColor(210, 0, 20);
   doc.text("LAMEL RENGOERING TJEKLISTE", 14, 18);
 
-  // Meta-info
   doc.setFontSize(11);
   doc.setTextColor(60, 60, 60);
   doc.text("Dato: " + dato, 14, 28);
@@ -679,7 +674,6 @@ function generateChecklistPDF(){
 
   let startY = 42;
 
-  // Global note
   if(current.globalNote && current.globalNote.trim()){
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
@@ -688,7 +682,6 @@ function generateChecklistPDF(){
     startY += noteLines.length * 5 + 6;
   }
 
-  // Byg tabeldata grupperet per sektion
   const groups = groupedRows(current.rows);
   const tableHead = [["Punkt", "Udført", "Fejlmeldt eROPEX", "Kommentar"]];
   const tableBody = [];
@@ -742,7 +735,6 @@ function generateChecklistPDF(){
     }
   });
 
-  // Footer
   const pageCount = doc.internal.getNumberOfPages();
   for(let i = 1; i <= pageCount; i++){
     doc.setPage(i);
@@ -783,7 +775,6 @@ btnClearAll.addEventListener("click", ()=>{
   }
 });
 
-/* "Lav PDF" – genererer og downloader PDF direkte (INGEN window.print!) */
 btnPdf.addEventListener("click", ()=>{
   if(!current) return;
   upsertCurrent();
@@ -797,7 +788,6 @@ btnPdf.addEventListener("click", ()=>{
   doc.save(filename);
 });
 
-/* "Send PDF via Mail" – genererer PDF, forsøger share, ellers download + mailto */
 btnSendPdf.addEventListener("click", async ()=>{
   if(!current) return;
   upsertCurrent();
@@ -812,7 +802,6 @@ btnSendPdf.addEventListener("click", async ()=>{
   const pdfBlob = doc.output('blob');
   const file = new File([pdfBlob], filename, { type: "application/pdf" });
 
-  // Forsøg Web Share API (mobil + nyere browsere)
   if(navigator.share && navigator.canShare && navigator.canShare({ files: [file] })){
     try {
       await navigator.share({
@@ -826,7 +815,6 @@ btnSendPdf.addEventListener("click", async ()=>{
     }
   }
 
-  // Fallback: Download PDF og åbn mail-klient
   const url = URL.createObjectURL(pdfBlob);
   const a = document.createElement("a");
   a.href = url;
