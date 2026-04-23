@@ -270,6 +270,7 @@
           <button id="btnSave">Gem</button>
           <button class="secondary" id="btnBack">Tilbage</button>
           <button class="secondary" id="btnPdf">Lav PDF</button>
+          <button id="btnSendPdf" style="background:var(--rw-teal)">Send PDF via Mail</button>
           <button class="danger" id="btnDelete">Slet</button>
         </div>
         <div id="saveHint" class="muted small" style="margin-top:10px"></div>
@@ -330,7 +331,7 @@ const CHECKLIST = [
 
   { type:"topic", text:"Opruller" },
   { type:"item", text:"Opruller - maskine renses eller blæses ren" },
-  { type:"item", text:"Tapedispenser knive", noteLines:[{ text:"(NB! Tænder renses med klude og kontaktrens)", red:true }]},
+  { type:"item", text:"Tapedispenser knive", noteLines:[{ text:"(NB! Rengøres med klude og kontaktrens)", red:true }]},
   { type:"item", text:"Rense filtrene på tapedispenserne" },
 
   { type:"topic", text:"Vikler" },
@@ -383,6 +384,7 @@ const btnNew2 = document.getElementById("btnNew2");
 const btnBack = document.getElementById("btnBack");
 const btnSave = document.getElementById("btnSave");
 const btnPdf = document.getElementById("btnPdf");
+const btnSendPdf = document.getElementById("btnSendPdf");
 const btnDelete = document.getElementById("btnDelete");
 const btnClearAll = document.getElementById("btnClearAll");
 const savedTbody = document.getElementById("savedTbody");
@@ -789,6 +791,58 @@ btnPdf.addEventListener("click", ()=>{
   const filename = "Lamel_Rengoering_" + (current.signature || "tjekliste").replace(/\s+/g,"_") + "_" + dato.replace(/[\/\s:,]/g,"-") + ".pdf";
 
   doc.save(filename);
+});
+
+/* "Send PDF via Mail" – genererer PDF, forsøger share, ellers download + mailto */
+btnSendPdf.addEventListener("click", async ()=>{
+  if(!current) return;
+  upsertCurrent();
+
+  const doc = generateChecklistPDF();
+  if(!doc) return;
+
+  const dato = current.datetime ? new Date(current.datetime).toLocaleString("da-DK") : "tjekliste";
+  const navn = current.signature || "ukendt";
+  const filename = "Lamel_Rengoering_" + navn.replace(/\s+/g,"_") + "_" + dato.replace(/[\/\s:,]/g,"-") + ".pdf";
+
+  const pdfBlob = doc.output('blob');
+  const file = new File([pdfBlob], filename, { type: "application/pdf" });
+
+  // Forsøg Web Share API (mobil + nyere browsere)
+  if(navigator.share && navigator.canShare && navigator.canShare({ files: [file] })){
+    try {
+      await navigator.share({
+        files: [file],
+        title: "Lamel Rengoering Tjekliste",
+        text: "Tjekliste for " + dato + " af " + navn
+      });
+      return;
+    } catch(err){
+      if(err.name === 'AbortError') return;
+    }
+  }
+
+  // Fallback: Download PDF og åbn mail-klient
+  const url = URL.createObjectURL(pdfBlob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+
+  setTimeout(()=>{
+    const subject = encodeURIComponent("Lamel Rengoering Tjekliste - " + dato);
+    const body = encodeURIComponent(
+      "Hej,\n\n" +
+      "Vedhaeftet finder du tjeklisten for Lamel Rengoering.\n\n" +
+      "Dato: " + dato + "\n" +
+      "Underskrift: " + navn + "\n\n" +
+      "Husk at vedhaeft den downloadede PDF-fil.\n\n" +
+      "Venlig hilsen\n" + navn
+    );
+    window.location.href = "mailto:?subject=" + subject + "&body=" + body;
+  }, 500);
 });
 
 dt.addEventListener("input", ()=>{ if(current){ current.datetime = dt.value; current.updatedAt = new Date().toISOString(); }});
