@@ -4,8 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>LAMEL RENGØRING TJEKLISTE</title>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
   <style>
     :root{
       --rw-red:#D20014;
@@ -290,6 +288,10 @@
     </div>
   </section>
 </div>
+
+<!-- jsPDF biblioteker – loades fra CDN -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 
 <script>
 const STORAGE_KEY = "lamel_rengoering_tjeklister_v3";
@@ -638,8 +640,16 @@ function upsertCurrent(){
 /* ============================================
    PDF GENERATOR – bruger jsPDF + autoTable
    ============================================ */
+function isJsPDFReady(){
+  return !!(window.jspdf && window.jspdf.jsPDF);
+}
+
 function generateChecklistPDF(){
   if(!current) return null;
+  if(!isJsPDFReady()){
+    alert("FEJL: PDF-biblioteket (jsPDF) er ikke loaded.\n\nDu skal have internetforbindelse for at bruge PDF-funktionen.\n\nTjek din forbindelse og genindlæs siden.");
+    return null;
+  }
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
@@ -649,8 +659,8 @@ function generateChecklistPDF(){
 
   // Titel
   doc.setFontSize(20);
-  doc.setTextColor(210, 0, 20); // Rockwool rød
-  doc.text("LAMEL RENGØRING TJEKLISTE", 14, 18);
+  doc.setTextColor(210, 0, 20);
+  doc.text("LAMEL RENGOERING TJEKLISTE", 14, 18);
 
   // Meta-info
   doc.setFontSize(11);
@@ -658,21 +668,23 @@ function generateChecklistPDF(){
   doc.text("Dato: " + dato, 14, 28);
   doc.text("Underskrift: " + navn, 14, 34);
 
+  let startY = 42;
+
   // Global note
   if(current.globalNote && current.globalNote.trim()){
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
     const noteLines = doc.splitTextToSize("Note: " + current.globalNote.trim(), 180);
-    doc.text(noteLines, 14, 42);
+    doc.text(noteLines, 14, startY);
+    startY += noteLines.length * 5 + 6;
   }
 
   // Byg tabeldata grupperet per sektion
   const groups = groupedRows(current.rows);
-  const tableHead = [["Punkt", "Udført", "Fejlmeldt eROPEX", "Kommentar"]];
+  const tableHead = [["Punkt", "Udfoert", "Fejlmeldt eROPEX", "Kommentar"]];
   const tableBody = [];
 
   groups.forEach(group => {
-    // Sektion-header som en row
     tableBody.push([{
       content: group.topic.text,
       colSpan: 4,
@@ -687,15 +699,13 @@ function generateChecklistPDF(){
         });
       }
 
-      const done = row.done === "yes" ? "✓" : (row.done === "no" ? "X" : "—");
-      const eropex = row.eropex === "yes" ? "✓" : (row.eropex === "no" ? "X" : "—");
+      const done = row.done === "yes" ? "JA" : (row.done === "no" ? "NEJ" : "---");
+      const eropex = row.eropex === "yes" ? "JA" : (row.eropex === "no" ? "NEJ" : "---");
       const comment = row.comment || "";
 
       tableBody.push([punktText, done, eropex, comment]);
     });
   });
-
-  const startY = (current.globalNote && current.globalNote.trim()) ? 50 : 42;
 
   doc.autoTable({
     head: tableHead,
@@ -711,13 +721,12 @@ function generateChecklistPDF(){
       3: { cellWidth: 45 }
     },
     didParseCell: function(data){
-      // Farv ✓ grøn/teal og X grå
       if(data.section === 'body' && (data.column.index === 1 || data.column.index === 2)){
-        if(data.cell.raw === "✓"){
-          data.cell.styles.textColor = [32, 134, 132]; // teal
+        if(data.cell.raw === "JA"){
+          data.cell.styles.textColor = [32, 134, 132];
           data.cell.styles.fontStyle = 'bold';
-        } else if(data.cell.raw === "X"){
-          data.cell.styles.textColor = [101, 101, 101]; // grå
+        } else if(data.cell.raw === "NEJ"){
+          data.cell.styles.textColor = [101, 101, 101];
           data.cell.styles.fontStyle = 'bold';
         }
       }
@@ -730,7 +739,7 @@ function generateChecklistPDF(){
     doc.setPage(i);
     doc.setFontSize(8);
     doc.setTextColor(150);
-    doc.text("Lamel Rengøring Tjekliste — " + dato + " — Side " + i + "/" + pageCount, 14, doc.internal.pageSize.height - 10);
+    doc.text("Lamel Rengoering Tjekliste - " + dato + " - Side " + i + "/" + pageCount, 14, doc.internal.pageSize.height - 10);
   }
 
   return doc;
@@ -765,12 +774,13 @@ btnClearAll.addEventListener("click", ()=>{
   }
 });
 
-/* "Lav PDF" – genererer og downloader PDF direkte */
+/* "Lav PDF" – genererer og downloader PDF direkte (INGEN window.print!) */
 btnPdf.addEventListener("click", ()=>{
   if(!current) return;
   upsertCurrent();
+
   const doc = generateChecklistPDF();
-  if(!doc) return;
+  if(!doc) return; // fejl vises i generateChecklistPDF()
 
   const dato = current.datetime ? new Date(current.datetime).toLocaleString("da-DK") : "tjekliste";
   const filename = "Lamel_Rengoering_" + (current.signature || "tjekliste").replace(/\s+/g,"_") + "_" + dato.replace(/[\/\s:,]/g,"-") + ".pdf";
@@ -782,6 +792,7 @@ btnPdf.addEventListener("click", ()=>{
 btnSendPdf.addEventListener("click", async ()=>{
   if(!current) return;
   upsertCurrent();
+
   const doc = generateChecklistPDF();
   if(!doc) return;
 
@@ -792,18 +803,17 @@ btnSendPdf.addEventListener("click", async ()=>{
   const pdfBlob = doc.output('blob');
   const file = new File([pdfBlob], filename, { type: "application/pdf" });
 
-  // Forsøg Web Share API (virker på mobil og nyere browsere)
+  // Forsøg Web Share API (mobil + nyere browsere)
   if(navigator.share && navigator.canShare && navigator.canShare({ files: [file] })){
     try {
       await navigator.share({
         files: [file],
-        title: "Lamel Rengøring Tjekliste",
+        title: "Lamel Rengoering Tjekliste",
         text: "Tjekliste for " + dato + " af " + navn
       });
-      return; // Deling lykkedes
+      return;
     } catch(err){
-      if(err.name === 'AbortError') return; // Bruger annullerede
-      // Fald igennem til download+mailto
+      if(err.name === 'AbortError') return;
     }
   }
 
@@ -817,13 +827,13 @@ btnSendPdf.addEventListener("click", async ()=>{
   document.body.removeChild(a);
 
   setTimeout(()=>{
-    const subject = encodeURIComponent("Lamel Rengøring Tjekliste - " + dato);
+    const subject = encodeURIComponent("Lamel Rengoering Tjekliste - " + dato);
     const body = encodeURIComponent(
       "Hej,\n\n" +
-      "Vedhæftet finder du tjeklisten for Lamel Rengøring.\n\n" +
+      "Vedhaeftet finder du tjeklisten for Lamel Rengoering.\n\n" +
       "Dato: " + dato + "\n" +
       "Underskrift: " + navn + "\n\n" +
-      "Husk at vedhæfte den downloadede PDF-fil.\n\n" +
+      "Husk at vedhaeft den downloadede PDF-fil.\n\n" +
       "Venlig hilsen\n" + navn
     );
     window.location.href = "mailto:?subject=" + subject + "&body=" + body;
@@ -843,3 +853,4 @@ showHome();
 </script>
 </body>
 </html>
+
